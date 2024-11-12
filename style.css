@@ -12,7 +12,7 @@ body {
 }
 
 .stick-figure {
-    width: 150px; /* Adjust based on your image size */
+    width: 300px; /* Adjust based on your image size */
     height: auto;
     margin: 10px;
 }
