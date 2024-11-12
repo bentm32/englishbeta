@@ -9,7 +9,7 @@ function updateStickFigures(count) {
     for (let i = 0; i < count; i++) {
         const stickFigure = document.createElement('img');
         stickFigure.classList.add('stick-figure');
-        stickFigure.src = 'stick-figure.png'; // Path to your image
+        stickFigure.src = 'stick-figure.jpg'; // Path to your image
         stickFigure.alt = 'Stick Figure ' + (i + 1);
 
         // Append the image to the container
