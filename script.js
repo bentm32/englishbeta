@@ -40,3 +40,4 @@ visitCountRef.transaction(count => {
 let count = 0;
 document.getElementById('stick-figure-container').innerHTML += `<div>Stick Figure ${count}</div>`;
 count++;  // Increment count for the next figure
+ 
