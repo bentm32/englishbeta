@@ -41,3 +41,17 @@ visitCountRef.transaction(count => {
 }).catch(error => {
     console.error("Error updating visit count:", error);
 });
+
+
+// Example script.js file
+function addStickFigure(count) {
+    // Adding stick figure to Firebase database
+    firebase.database().ref('stickFigures/' + count).set({
+        name: "stick figure " + count
+    });
+}
+
+// Example to trigger the addStickFigure function
+let count = 0;
+document.getElementById('stick-figure-container').innerHTML += `<div>Stick Figure ${count}</div>`;
+count++;  // Increment count for the next figure
