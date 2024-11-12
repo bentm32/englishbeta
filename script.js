@@ -5,40 +5,18 @@ function updateStickFigures(count) {
     const container = document.getElementById('stick-figure-container');
     container.innerHTML = ''; // Clear previous stick figures
 
+    // Loop to create and append images
     for (let i = 0; i < count; i++) {
-        const stickFigure = document.createElement('div');
+        const stickFigure = document.createElement('img');
         stickFigure.classList.add('stick-figure');
+        stickFigure.src = 'stick-figure.png'; // Path to your image
+        stickFigure.alt = 'Stick Figure ' + (i + 1);
 
-        // Create a head (circle)
-        const head = document.createElement('div');
-        head.classList.add('head');
-        stickFigure.appendChild(head);
-
-        // Create the body (line)
-        const body = document.createElement('div');
-        body.classList.add('body');
-        stickFigure.appendChild(body);
-
-        // Create arms (lines)
-        const leftArm = document.createElement('div');
-        leftArm.classList.add('left-arm');
-        stickFigure.appendChild(leftArm);
-        const rightArm = document.createElement('div');
-        rightArm.classList.add('right-arm');
-        stickFigure.appendChild(rightArm);
-
-        // Create legs (lines)
-        const leftLeg = document.createElement('div');
-        leftLeg.classList.add('left-leg');
-        stickFigure.appendChild(leftLeg);
-        const rightLeg = document.createElement('div');
-        rightLeg.classList.add('right-leg');
-        stickFigure.appendChild(rightLeg);
-
-        // Append the figure to the container
+        // Append the image to the container
         container.appendChild(stickFigure);
     }
 }
+
 
 
 // Reference to the 'visitCount' in Firebase database

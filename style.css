@@ -12,60 +12,7 @@ body {
 }
 
 .stick-figure {
-    position: relative;
-    width: 30px;
-    height: 100px;
+    width: 30px; /* Adjust based on your image size */
+    height: auto;
     margin: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    animation: fadeIn 0.5s forwards;
 }
-
-.head {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: black;
-    margin-bottom: 5px;
-}
-
-.body {
-    width: 5px;
-    height: 40px;
-    background-color: black;
-}
-
-.left-arm, .right-arm {
-    width: 30px;
-    height: 5px;
-    background-color: black;
-    position: absolute;
-    top: 30px;
-}
-
-.left-arm {
-    left: -35px;
-}
-
-.right-arm {
-    right: -35px;
-}
-
-.left-leg, .right-leg {
-    width: 5px;
-    height: 40px;
-    background-color: black;
-    position: absolute;
-    top: 80px;
-}
-
-.left-leg {
-    left: -15px;
-}
-
-.right-leg {
-    right: -15px;
-}
-
