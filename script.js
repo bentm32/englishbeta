@@ -35,8 +35,3 @@ visitCountRef.transaction(count => {
     console.error("Error updating visit count:", error);
 });
 
-// Example to add a stick figure to Firebase
-let count = 0;
-document.getElementById('stick-figure-container').innerHTML += `<div>Stick Figure ${count}</div>`;
-count++;  // Increment count for the next figure
- 
