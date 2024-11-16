@@ -78,13 +78,16 @@ let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
-// Function to calculate mouse/touch position (no scaling for position)
 function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
+    
+    // For touch events, use touches[0], for mouse events, use clientX/Y
     const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
     const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
-    return { x, y }; // No devicePixelRatio scaling for cursor position
+    
+    return { x, y };
 }
+
 
 
 // Start drawing when mouse or touch starts
@@ -143,8 +146,8 @@ submitButton.addEventListener('click', () => {
 });
 
   
-  // Function to resize the image before displaying it
-function resizeImage(imageUrl, width, height) {
+// Resize the image for display purposes
+function resizeImage(imageUrl, maxWidth, maxHeight) {
     const img = new Image();
     img.src = imageUrl;
 
@@ -152,30 +155,40 @@ function resizeImage(imageUrl, width, height) {
         img.onload = () => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            
-            // Set canvas dimensions to match the desired width and height
+
+            // Maintain the aspect ratio
+            const aspectRatio = img.width / img.height;
+            let width = maxWidth;
+            let height = maxHeight;
+
+            if (img.width > img.height) {
+                height = width / aspectRatio;
+            } else {
+                width = height * aspectRatio;
+            }
+
+            // Set canvas dimensions based on image's aspect ratio
             canvas.width = width;
             canvas.height = height;
 
-            // Draw the image at the desired size
+            // Draw image resized on canvas
             ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL()); // Return resized image as a Data URL
+            resolve(canvas.toDataURL());
         };
     });
 }
 
-// Update the updateStickFigures function to scale the drawings when displaying
+// Update function for displaying stick figures with proper scaling
 function updateStickFigures() {
     const stickFigureContainer = document.getElementById('stick-figure-container');
     
-    // Get all stick figures from Firebase
     const stickFiguresRef = firebase.database().ref('stickFigures');
     stickFiguresRef.on('child_added', async (snapshot) => {
         const stickFigureData = snapshot.val();
         if (stickFigureData && stickFigureData.imageUrl) {
             const imgElement = document.createElement('img');
-            
-            // Resize the image before displaying
+
+            // Resize the image before displaying it
             const resizedImageUrl = await resizeImage(stickFigureData.imageUrl, window.innerWidth * 0.8, window.innerHeight * 0.3);
             imgElement.src = resizedImageUrl;
             imgElement.classList.add('stick-figure');
@@ -202,25 +215,24 @@ function updateStickFigures() {
   firebase.initializeApp(firebaseConfig);
   var database = firebase.database();
 
-// Dynamically set the canvas size based on window width and height
+// Adjust canvas size and high-DPI scaling
 function resizeCanvas() {
-    const canvas = document.getElementById('drawingCanvas');
-    const width = window.innerWidth * 0.9;  // 90% of the window width
-    const height = window.innerHeight * 0.4; // 40% of the window height
+    const scaleFactor = window.devicePixelRatio; // For high DPI screens
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-    // Set the canvas display size
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    // Set canvas CSS size to the actual width and height
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
 
-    // Set the actual canvas size for drawing (scaling for device pixel ratio)
-    canvas.width = width * window.devicePixelRatio; // Scale for high-DPI screens
-    canvas.height = height * window.devicePixelRatio; // Scale for high-DPI screens
+    // Set the canvas drawing buffer size (scaled for high-DPI)
+    canvas.width = width * scaleFactor;
+    canvas.height = height * scaleFactor;
 
-    // Scale the drawing context to match the canvas size
+    // Get the 2d context and scale for high DPI
     const ctx = canvas.getContext('2d');
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio); // Ensure the drawing matches the canvas size
+    ctx.scale(scaleFactor, scaleFactor);
 }
-
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
 window.onresize = resizeCanvas;
