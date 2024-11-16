@@ -1,29 +1,24 @@
-// Import Firebase SDK
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
-import { getDatabase, ref, set, get, push, onValue } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
-
-// Firebase configuration
+// Firebase Configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBqz7fjMJVd1lstR-sdTgd-sS1YUui3pN0",
-    authDomain: "englishproject-810af.firebaseapp.com",
-    databaseURL: "https://englishproject-810af-default-rtdb.firebaseio.com",
-    projectId: "englishproject-810af",
-    storageBucket: "englishproject-810af.firebasestorage.app",
-    messagingSenderId: "958433136274",
-    appId: "1:958433136274:web:f7574ec8e517451269204b",
-    measurementId: "G-N1J6SFJV5E"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID",
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.database(app);
 
 // Visitor Counter
-const visitorCounterRef = ref(db, "visitorCount");
-get(visitorCounterRef).then((snapshot) => {
+const visitorCounterRef = db.ref("visitorCount");
+visitorCounterRef.once('value').then((snapshot) => {
     let visitorCount = snapshot.exists() ? snapshot.val() : 0;
     visitorCount++;
-    set(visitorCounterRef, visitorCount);
+    visitorCounterRef.set(visitorCount);
     document.getElementById("visitor-count").textContent = visitorCount;
 });
 
@@ -82,9 +77,9 @@ function submitContent() {
     const drawingData = canvas.toDataURL();
 
     // Save to Firebase
-    const submissionsRef = ref(db, "submissions");
-    const newSubmissionRef = push(submissionsRef);
-    set(newSubmissionRef, { drawing: drawingData, message });
+    const submissionsRef = db.ref("submissions");
+    const newSubmissionRef = submissionsRef.push();
+    newSubmissionRef.set({ drawing: drawingData, message });
 
     // Display new submission in the gallery
     addToGallery({ drawing: drawingData, message });
@@ -117,11 +112,8 @@ function addToGallery({ drawing, message }) {
 }
 
 // Fetch submissions from Firebase and display them
-const submissionsRef = ref(db, "submissions");
-onValue(submissionsRef, (snapshot) => {
-    const gallery = document.getElementById("gallery");
-    gallery.innerHTML = ""; // Clear existing gallery
-    snapshot.forEach((childSnapshot) => {
-        addToGallery(childSnapshot.val());
-    });
+const submissionsRef = db.ref("submissions");
+submissionsRef.on("child_added", (snapshot) => {
+    const data = snapshot.val();
+    addToGallery(data);
 });
