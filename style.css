@@ -5,7 +5,8 @@ body {
     padding: 20px;
     background-color: #808080;
     margin: 0;
-    overflow-x: hidden; /* Prevent scrolling on mobile */
+    overflow-x: hidden; 
+    overflow-y: auto;
 }
 
 /* Stick figure container styling */
