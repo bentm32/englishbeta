@@ -80,11 +80,13 @@ let lastY = 0;
 
 function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
-    const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
-    const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
+    const scaleFactor = window.devicePixelRatio || 1; // Get scale factor
+    const x = ((e.clientX || e.touches[0].clientX) - canvasRect.left) * scaleFactor;
+    const y = ((e.clientY || e.touches[0].clientY) - canvasRect.top) * scaleFactor;
 
-    return { x, y }; // No scaling needed here
+    return { x, y }; // Correct the scaling
 }
+
 
 
 // Modify the event listeners to track touch positions correctly
