@@ -85,9 +85,32 @@ function getPosition(e) {
     const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
     const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
     
-    return { x, y };
+    // Account for the device pixel ratio for mobile
+    const scaleFactor = window.devicePixelRatio;
+    return { x: x * scaleFactor, y: y * scaleFactor };
 }
 
+// Modify the event listeners to track touch positions correctly
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const { x, y } = getPosition(e);
+    isDrawing = true;
+    lastX = x;
+    lastY = y;
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!isDrawing) return;
+    const { x, y } = getPosition(e);
+    draw(lastX, lastY, x, y);
+    lastX = x;
+    lastY = y;
+});
+
+canvas.addEventListener('touchend', () => {
+    isDrawing = false;
+});
 
 
 // Start drawing when mouse or touch starts
@@ -146,8 +169,8 @@ submitButton.addEventListener('click', () => {
 });
 
   
-// Resize the image for display purposes
-function resizeImage(imageUrl, maxWidth, maxHeight) {
+// Resize the image based on screen size to fit mobile
+function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
     const img = new Image();
     img.src = imageUrl;
 
@@ -156,7 +179,7 @@ function resizeImage(imageUrl, maxWidth, maxHeight) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
 
-            // Maintain the aspect ratio
+            // Maintain aspect ratio while scaling
             const aspectRatio = img.width / img.height;
             let width = maxWidth;
             let height = maxHeight;
@@ -167,18 +190,16 @@ function resizeImage(imageUrl, maxWidth, maxHeight) {
                 width = height * aspectRatio;
             }
 
-            // Set canvas dimensions based on image's aspect ratio
             canvas.width = width;
             canvas.height = height;
-
-            // Draw image resized on canvas
             ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL());
+
+            resolve(canvas.toDataURL()); // Return the resized image as a data URL
         };
     });
 }
 
-// Update function for displaying stick figures with proper scaling
+// Use resizeImageForMobile when adding images to the UI
 function updateStickFigures() {
     const stickFigureContainer = document.getElementById('stick-figure-container');
     
@@ -188,14 +209,15 @@ function updateStickFigures() {
         if (stickFigureData && stickFigureData.imageUrl) {
             const imgElement = document.createElement('img');
 
-            // Resize the image before displaying it
-            const resizedImageUrl = await resizeImage(stickFigureData.imageUrl, window.innerWidth * 0.8, window.innerHeight * 0.3);
+            // Resize the image for mobile display
+            const resizedImageUrl = await resizeImageForMobile(stickFigureData.imageUrl, window.innerWidth * 0.8, window.innerHeight * 0.3);
             imgElement.src = resizedImageUrl;
             imgElement.classList.add('stick-figure');
             stickFigureContainer.appendChild(imgElement);
         }
     });
 }
+
 
   
   // Initial call to load existing stick figures
