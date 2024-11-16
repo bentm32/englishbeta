@@ -3,38 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exploration Counter</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Interactive Exploration</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <p>Each time someone scans the QR code, a new stick figure appears here</p>
-    
-    <!-- Container for stick figures -->
-    <div id="stick-figure-container"></div>
+    <header>
+        <h1>Welcome to Exploration</h1>
+        <h2 id="visitor-counter">Visitors: <span id="visitor-count">1</span></h2>
+    </header>
 
-    <!-- Include Firebase v8.x SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    
-    <!-- Firebase Configuration -->
-    <script>
-        var firebaseConfig = {
-            apiKey: "AIzaSyBqz7fjMJVd1lstR-sdTgd-sS1YUui3pN0",
-            authDomain: "englishproject-810af.firebaseapp.com",
-            databaseURL: "https://englishproject-810af-default-rtdb.firebaseio.com",
-            projectId: "englishproject-810af",
-              storageBucket: "englishproject-810af.firebasestorage.app",
-              messagingSenderId: "958433136274",
-              appId: "1:958433136274:web:f7574ec8e517451269204b",
-              measurementId: "G-N1J6SFJV5E"
-        };
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        var database = firebase.database();
-    </script>
-    
-    <!-- Link to your script file -->
+    <main>
+        <section id="interactive-section">
+            <h2>Express Yourself!</h2>
+
+            <!-- Drawing Section -->
+            <div id="drawing-area">
+                <h3>Draw Something!</h3>
+                <canvas id="drawingCanvas" width="500" height="300"></canvas>
+                <div>
+                    <button onclick="clearCanvas()">Clear Drawing</button>
+                </div>
+            </div>
+
+            <!-- Text Writing Section -->
+            <div id="writing-area">
+                <h3>Write a Message!</h3>
+                <textarea id="message" placeholder="Write your message here..."></textarea>
+            </div>
+
+            <!-- Submission -->
+            <div>
+                <button onclick="submitContent()">Submit</button>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section>
+            <h2>Gallery</h2>
+            <div id="gallery"></div>
+        </section>
+    </main>
+
     <script src="script.js"></script>
 </body>
 </html>

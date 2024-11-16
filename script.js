@@ -1,37 +1,61 @@
-// Firebase Realtime Database interaction (using Firebase v8.x)
+// Visitor Counter (simulated with localStorage)
+const visitorCount = localStorage.getItem("visitorCount") || 1;
+document.getElementById("visitor-count").textContent = visitorCount;
+localStorage.setItem("visitorCount", parseInt(visitorCount) + 1);
 
-// Example function to update stick figures
-function updateStickFigures(count) {
-    const container = document.getElementById('stick-figure-container');
-    container.innerHTML = ''; // Clear previous stick figures
+// Canvas Drawing Logic
+const canvas = document.getElementById("drawingCanvas");
+const ctx = canvas.getContext("2d");
+let isDrawing = false;
 
-    // Loop to create and append images
-    for (let i = 0; i < count; i++) {
-        const stickFigure = document.createElement('img');
-        stickFigure.classList.add('stick-figure');
-        stickFigure.src = 'stick-figure.jpg'; // Path to your image
+canvas.addEventListener("mousedown", () => (isDrawing = true));
+canvas.addEventListener("mouseup", () => (isDrawing = false));
+canvas.addEventListener("mousemove", draw);
 
-        // Append the image to the container
-        container.appendChild(stickFigure);
-    }
+function draw(event) {
+    if (!isDrawing) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, Math.PI * 2);
+    ctx.fill();
 }
 
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 
+// Submit Content
+function submitContent() {
+    const message = document.getElementById("message").value;
+    const gallery = document.getElementById("gallery");
 
-// Reference to the 'visitCount' in Firebase database
-var visitCountRef = firebase.database().ref('visitCount');
+    // Save canvas as image
+    const drawingData = canvas.toDataURL();
 
-// Increment the visit count every time the page loads
-visitCountRef.transaction(count => {
-    if (count === null) {
-        return 1; // If no visits, set to 1
-    } else {
-        return count + 1; // Otherwise, increment the count
+    // Create gallery item
+    const galleryItem = document.createElement("div");
+    galleryItem.className = "gallery-item";
+
+    if (drawingData) {
+        const img = document.createElement("img");
+        img.src = drawingData;
+        galleryItem.appendChild(img);
     }
-}).then(result => {
-    const newCount = result.snapshot.val();
-    updateStickFigures(newCount);
-}).catch(error => {
-    console.error("Error updating visit count:", error);
-});
 
+    if (message) {
+        const text = document.createElement("p");
+        text.textContent = message;
+        galleryItem.appendChild(text);
+    }
+
+    gallery.appendChild(galleryItem);
+
+    // Clear inputs
+    clearCanvas();
+    document.getElementById("message").value = "";
+}
