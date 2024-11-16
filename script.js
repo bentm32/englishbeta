@@ -70,7 +70,7 @@ particlesJS('particles-js', {
     retina_detect: true
   });
   
-  // Get canvas element and set up drawing context
+ // Get canvas element and set up drawing context
 const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -78,21 +78,21 @@ let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
-// Get the canvas's offset relative to the page
-const canvasRect = canvas.getBoundingClientRect();
-
 // Start drawing when mouse is pressed
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
-    lastX = e.clientX - canvasRect.left; // Correct offset calculation
-    lastY = e.clientY - canvasRect.top;
+    // Get canvas's position relative to the page, including scroll offset
+    const canvasRect = canvas.getBoundingClientRect();
+    lastX = e.clientX - canvasRect.left + window.scrollX; // Add scroll offset
+    lastY = e.clientY - canvasRect.top + window.scrollY; // Add scroll offset
 });
 
 // Draw while mouse is moving
 canvas.addEventListener('mousemove', (e) => {
     if (!isDrawing) return;
-    const currentX = e.clientX - canvasRect.left; // Correct offset calculation
-    const currentY = e.clientY - canvasRect.top;
+    const canvasRect = canvas.getBoundingClientRect();
+    const currentX = e.clientX - canvasRect.left + window.scrollX; // Add scroll offset
+    const currentY = e.clientY - canvasRect.top + window.scrollY; // Add scroll offset
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
     ctx.lineTo(currentX, currentY);
