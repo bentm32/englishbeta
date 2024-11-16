@@ -1,32 +1,46 @@
-/* Ensure the particles background covers the entire viewport */
-#particles-js {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* Ensure the particles are behind other elements */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background-color: #808080; /* Gray background for the whole page */
+    margin: 0;
 }
 
-/* Style for canvas to ensure it's above particles */
-#drawingCanvas {
-    position: relative;
-    z-index: 1; /* Canvas appears above particles */
-    border: 1px solid black; /* Optional border */
-    background-color: white; /* White background for the canvas */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional canvas shadow */
-}
-
-/* Style for stick figure container */
 #stick-figure-container {
-    position: relative;
-    z-index: 2; /* Images also appear above particles */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     margin-top: 20px;
 }
 
-.stick-figure {
-    max-width: 100%;
-    height: auto;
+#drawingCanvas {
+    border: none;
     display: block;
-    margin: 10px auto;
+    margin: 20px auto;
+    background-color: white; /* White background for the drawing canvas */
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+}
+
+#particles-js {
+    position: fixed; /* Make it fixed in place to cover the background */
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1; /* Ensure particles are behind other content */
+}
+
+#particles-js canvas {
+    display: block; /* Prevents extra spacing */
+    width: 100%;
+    height: 100%;
+}
+
+p {
+    color: #333; /* Text color */
+    font-size: 18px;
 }
