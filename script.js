@@ -70,9 +70,15 @@ particlesJS('particles-js', {
     retina_detect: true
   });
   
- // Get canvas element and set up drawing context
+// Get canvas element and set up drawing context
 const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d');
+
+// Set the canvas size to match the displayed size, but scale for devicePixelRatio
+const scale = window.devicePixelRatio; // Get the device pixel ratio for scaling
+canvas.width = canvas.offsetWidth * scale;
+canvas.height = canvas.offsetHeight * scale;
+ctx.scale(scale, scale); // Scale the drawing context to match the canvas size
 
 let isDrawing = false;
 let lastX = 0;
@@ -86,20 +92,20 @@ canvas.addEventListener('mousedown', (e) => {
     const canvasRect = canvas.getBoundingClientRect();
 
     // Calculate mouse position relative to the canvas
-    lastX = e.clientX - canvasRect.left; // Subtract the left offset
-    lastY = e.clientY - canvasRect.top;  // Subtract the top offset
+    lastX = (e.clientX - canvasRect.left) * scale; // Subtract left offset and scale
+    lastY = (e.clientY - canvasRect.top) * scale;  // Subtract top offset and scale
 });
 
 // Draw while mouse is moving
 canvas.addEventListener('mousemove', (e) => {
     if (!isDrawing) return;
 
-    // Get canvas's position again (in case it moves)
+    // Get canvas's position relative to the page
     const canvasRect = canvas.getBoundingClientRect();
 
     // Calculate current mouse position relative to the canvas
-    const currentX = e.clientX - canvasRect.left;
-    const currentY = e.clientY - canvasRect.top;
+    const currentX = (e.clientX - canvasRect.left) * scale;
+    const currentY = (e.clientY - canvasRect.top) * scale;
 
     // Draw line based on the calculated positions
     ctx.beginPath();
@@ -121,6 +127,7 @@ canvas.addEventListener('mouseup', () => {
 document.getElementById('clearCanvas').addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
+
 
   // Handle submit button click
 const submitButton = document.getElementById('submitDrawing');
