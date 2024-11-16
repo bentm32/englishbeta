@@ -43,7 +43,7 @@ particlesJS('particles-js', {
       },
       move: {
         enable: true,
-        speed: 6,
+        speed: 3,
         direction: "none",
         random: true,
         straight: false,
@@ -129,7 +129,30 @@ particlesJS('particles-js', {
       });
   });
   
-  // Load and display all stored drawings from Firebase
+  // Function to update and display all stick figures from Firebase
+  function updateStickFigures() {
+      const stickFigureContainer = document.getElementById('stick-figure-container');
+  
+      // Get all stick figures from Firebase
+      const stickFiguresRef = firebase.database().ref('stickFigures');
+      stickFiguresRef.on('child_added', (snapshot) => {
+          const stickFigureData = snapshot.val();
+          if (stickFigureData && stickFigureData.imageUrl) {
+              const imgElement = document.createElement('img');
+              imgElement.src = stickFigureData.imageUrl;
+              imgElement.classList.add('stick-figure');
+              stickFigureContainer.appendChild(imgElement);
+          }
+      });
+  
+      // Optional: Listen for changes if you want to update dynamically
+      stickFiguresRef.on('child_changed', (snapshot) => {
+          const stickFigureData = snapshot.val();
+          // Handle updated data if needed
+      });
+  }
+  
+  // Initial call to load existing stick figures
   updateStickFigures();
   
   // Firebase configuration and initialization
