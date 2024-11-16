@@ -16,3 +16,13 @@ body {
     height: auto;
     margin: 10px;
 }
+
+#drawingCanvas {
+    border: 1px solid #000;
+    display: block;
+    margin: 20px auto;
+}
+button {
+    display: block;
+    margin: 20px auto;
+}
