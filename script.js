@@ -109,25 +109,18 @@ particlesJS('particles-js', {
   });
   
   // Handle submit button click
-  const submitButton = document.getElementById('submitDrawing');
-  submitButton.addEventListener('click', () => {
-      const drawingDataUrl = canvas.toDataURL(); // Convert canvas to image
-  
-      // Save to Firebase
-      const stickFigureRef = firebase.database().ref('stickFigures');
-      stickFigureRef.push({ imageUrl: drawingDataUrl }).then(() => {
-          // Create an image element for the new drawing
-          const stickFigure = document.createElement('img');
-          stickFigure.src = drawingDataUrl;
-          stickFigure.classList.add('stick-figure');
-  
-          // Append the new image to the container
-          document.getElementById('stick-figure-container').appendChild(stickFigure);
-  
-          // Clear the canvas after submitting
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-      });
-  });
+const submitButton = document.getElementById('submitDrawing');
+submitButton.addEventListener('click', () => {
+    const drawingDataUrl = canvas.toDataURL(); // Convert canvas to image
+
+    // Save to Firebase
+    const stickFigureRef = firebase.database().ref('stickFigures');
+    stickFigureRef.push({ imageUrl: drawingDataUrl }).then(() => {
+        // Clear the canvas after submitting
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+});
+
   
   // Function to update and display all stick figures from Firebase
   function updateStickFigures() {
