@@ -70,3 +70,52 @@ canvas.addEventListener('mouseup', () => {
 document.getElementById('clearCanvas').addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
+
+particlesJS('particles-js', {
+    particles: {
+        number: {
+            value: 100,
+            density: {
+                enable: true,
+                value_area: 800
+            }
+        },
+        size: {
+            value: 3,
+            random: true,
+            anim: {
+                enable: true,
+                speed: 4,
+                size_min: 0.1
+            }
+        },
+        move: {
+            enable: true,
+            speed: 1,
+            direction: "random",
+            random: true,
+            straight: false,
+            out_mode: "out"
+        },
+        shape: {
+            type: "circle"
+        },
+        opacity: {
+            value: 0.5,
+            random: true,
+            anim: {
+                enable: true,
+                speed: 1,
+                opacity_min: 0.1
+            }
+        }
+    },
+    interactivity: {
+        events: {
+            onhover: {
+                enable: true,
+                mode: "repulse"
+            }
+        }
+    }
+});
