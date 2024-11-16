@@ -18,14 +18,11 @@ body {
 }
 
 #drawingCanvas {
-    border: none;
     display: block;
     margin: 20px auto;
     background-color: white;
-    width: 90%; /* Make the canvas width responsive */
-    height: auto; /* Maintain aspect ratio */
-    max-width: 500px; /* Limit max width */
-    max-height: 400px; /* Set a max height for the canvas */
+    max-width: 100%;  /* Full width on mobile */
+    max-height: 100%; /* Prevent overflow */
 }
 
 
@@ -47,6 +44,8 @@ body {
 }
 
 button {
+    display: block;
+    margin: 20px auto;
     padding: 12px 20px;
     font-size: 16px; /* Increase button text size */
     border-radius: 8px; /* Round button corners */

@@ -70,29 +70,21 @@ particlesJS('particles-js', {
     retina_detect: true
   });
   
-// Get canvas element and set up drawing context
+// Initialize canvas drawing logic
 const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d');
-
-// Set the canvas size to match the displayed size, but scale for devicePixelRatio
-const scale = window.devicePixelRatio; // Get the device pixel ratio for scaling
-canvas.width = canvas.offsetWidth * scale;
-canvas.height = canvas.offsetHeight * scale;
-ctx.scale(scale, scale); // Scale the drawing context to match the canvas size
 
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
-// Function to calculate mouse/touch position
-// Function to calculate mouse/touch position
+// Function to calculate mouse/touch position (scales for device pixel ratio)
 function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
     const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
     const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
-    return { x: x * window.devicePixelRatio, y: y * window.devicePixelRatio }; // Ensure scaling for high-DPI screens
+    return { x: x * window.devicePixelRatio, y: y * window.devicePixelRatio }; // Scale for high-DPI screens
 }
-
 
 // Start drawing when mouse or touch starts
 function startDrawing(e) {
@@ -125,12 +117,12 @@ canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', stopDrawing);
 
-// Touch events
+// Touch events (for mobile)
 canvas.addEventListener('touchstart', startDrawing);
 canvas.addEventListener('touchmove', draw);
 canvas.addEventListener('touchend', stopDrawing);
 
-// Optionally, clear the canvas
+// Clear canvas
 document.getElementById('clearCanvas').addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
@@ -189,23 +181,24 @@ submitButton.addEventListener('click', () => {
   };
   firebase.initializeApp(firebaseConfig);
   var database = firebase.database();
-  
-// Dynamically set the canvas size based on window width
+
+// Dynamically set the canvas size based on window width and height
 function resizeCanvas() {
     const canvas = document.getElementById('drawingCanvas');
-    const width = window.innerWidth * 0.9; // 90% of the window width
+    const width = window.innerWidth * 0.9;  // 90% of the window width
     const height = window.innerHeight * 0.4; // 40% of the window height
 
+    // Set the canvas display size
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
 
-    // Update canvas size to match the display size
-    canvas.width = width * window.devicePixelRatio;
-    canvas.height = height * window.devicePixelRatio;
+    // Set the actual canvas size for drawing
+    canvas.width = width * window.devicePixelRatio; // Scale for high-DPI screens
+    canvas.height = height * window.devicePixelRatio; // Scale for high-DPI screens
 
-    // Scale context for high-DPI displays
+    // Scale the drawing context to match the canvas size
     const ctx = canvas.getContext('2d');
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio); // Ensure the drawing matches the canvas size
 }
 
 // Call resizeCanvas on load and window resize
