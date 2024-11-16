@@ -122,8 +122,10 @@ function startDrawing(e) {
     lastY = y;
 }
 
-function draw(lastX, lastY, x, y) {
+// Draw while mouse or touch moves
+function draw(e) {
     if (!isDrawing) return;
+    const { x, y } = getPosition(e);
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
     ctx.lineTo(x, y);
@@ -131,6 +133,7 @@ function draw(lastX, lastY, x, y) {
     lastX = x;
     lastY = y;
 }
+
 // Stop drawing when mouse or touch ends
 function stopDrawing(e) {
     isDrawing = false;
@@ -166,7 +169,7 @@ submitButton.addEventListener('click', () => {
 });
 
   
-// Resize the image for better mobile display
+// Resize the image based on screen size to fit mobile
 function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
     const img = new Image();
     img.src = imageUrl;
@@ -181,16 +184,11 @@ function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
             let width = maxWidth;
             let height = maxHeight;
 
-            // Adjust size to fit mobile but with better scaling
             if (img.width > img.height) {
                 height = width / aspectRatio;
             } else {
                 width = height * aspectRatio;
             }
-
-            // Optional: Increase max size for mobile
-            width = Math.min(width, maxWidth * 1.2);
-            height = Math.min(height, maxHeight * 1.2);
 
             canvas.width = width;
             canvas.height = height;
@@ -200,7 +198,6 @@ function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
         };
     });
 }
-
 
 // Use resizeImageForMobile when adding images to the UI
 function updateStickFigures() {
