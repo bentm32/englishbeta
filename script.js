@@ -70,7 +70,7 @@ particlesJS('particles-js', {
     retina_detect: true
   });
   
-// Initialize canvas drawing logic
+// Initialize canvas and context
 const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -78,39 +78,15 @@ let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
+// Function to get the touch/mouse position on the canvas
 function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
     const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
     const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
-
     return { x, y }; // No scaling needed here
 }
 
-
-// Modify the event listeners to track touch positions correctly
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const { x, y } = getPosition(e);
-    isDrawing = true;
-    lastX = x;
-    lastY = y;
-});
-
-canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    if (!isDrawing) return;
-    const { x, y } = getPosition(e);
-    draw(lastX, lastY, x, y);
-    lastX = x;
-    lastY = y;
-});
-
-canvas.addEventListener('touchend', () => {
-    isDrawing = false;
-});
-
-
-// Start drawing when mouse or touch starts
+// Consolidate touch and mouse event listeners
 function startDrawing(e) {
     e.preventDefault(); // Prevent default action (scroll, zoom, etc.)
     isDrawing = true;
@@ -119,7 +95,6 @@ function startDrawing(e) {
     lastY = y;
 }
 
-// Draw while mouse or touch moves
 function draw(e) {
     if (!isDrawing) return;
     const { x, y } = getPosition(e);
@@ -131,137 +106,26 @@ function draw(e) {
     lastY = y;
 }
 
-// Stop drawing when mouse or touch ends
-function stopDrawing(e) {
+function stopDrawing() {
     isDrawing = false;
 }
 
-// Mouse events
+// Attach event listeners for both mouse and touch events
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', stopDrawing);
 
-// Touch events (for mobile)
 canvas.addEventListener('touchstart', startDrawing);
 canvas.addEventListener('touchmove', draw);
 canvas.addEventListener('touchend', stopDrawing);
 
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const { x, y } = getPosition(e);
-    isDrawing = true;
-    lastX = x;
-    lastY = y;
-});
-
-canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    if (!isDrawing) return;
-    const { x, y } = getPosition(e);
-    draw(lastX, lastY, x, y);
-    lastX = x;
-    lastY = y;
-});
-
-canvas.addEventListener('touchend', () => {
-    isDrawing = false;
-});
-
-// Clear canvas
-document.getElementById('clearCanvas').addEventListener('click', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-});
-
-
-  // Handle submit button click
-const submitButton = document.getElementById('submitDrawing');
-submitButton.addEventListener('click', () => {
-    const drawingDataUrl = canvas.toDataURL(); // Convert canvas to image
-
-    // Save to Firebase
-    const stickFigureRef = firebase.database().ref('stickFigures');
-    stickFigureRef.push({ imageUrl: drawingDataUrl }).then(() => {
-        // Clear the canvas after submitting
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    });
-});
-
-  
-// Resize the image based on screen size to fit mobile
-function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
-    const img = new Image();
-    img.src = imageUrl;
-
-    return new Promise((resolve) => {
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-
-            // Maintain aspect ratio while scaling
-            const aspectRatio = img.width / img.height;
-            let width = maxWidth;
-            let height = maxHeight;
-
-            if (img.width > img.height) {
-                height = width / aspectRatio;
-            } else {
-                width = height * aspectRatio;
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
-
-            resolve(canvas.toDataURL()); // Return the resized image as a data URL
-        };
-    });
-}
-
-// Use resizeImageForMobile when adding images to the UI
-function updateStickFigures() {
-    const stickFigureContainer = document.getElementById('stick-figure-container');
-    
-    const stickFiguresRef = firebase.database().ref('stickFigures');
-    stickFiguresRef.on('child_added', async (snapshot) => {
-        const stickFigureData = snapshot.val();
-        if (stickFigureData && stickFigureData.imageUrl) {
-            const imgElement = document.createElement('img');
-
-            // Resize the image for mobile display
-            const resizedImageUrl = await resizeImageForMobile(stickFigureData.imageUrl, window.innerWidth * 0.8, window.innerHeight * 0.3);
-            imgElement.src = resizedImageUrl;
-            imgElement.classList.add('stick-figure');
-            stickFigureContainer.appendChild(imgElement);
-        }
-    });
-}
-
-
-  
-  // Initial call to load existing stick figures
-  updateStickFigures();
-  
-  // Firebase configuration and initialization
-  var firebaseConfig = {
-      apiKey: "AIzaSyBqz7fjMJVd1lstR-sdTgd-sS1YUui3pN0",
-      authDomain: "englishproject-810af.firebaseapp.com",
-      databaseURL: "https://englishproject-810af-default-rtdb.firebaseio.com",
-      projectId: "englishproject-810af",
-      storageBucket: "englishproject-810af.firebasestorage.app",
-      messagingSenderId: "958433136274",
-      appId: "1:958433136274:web:f7574ec8e517451269204b",
-      measurementId: "G-N1J6SFJV5E"
-  };
-  firebase.initializeApp(firebaseConfig);
-  var database = firebase.database();
-
-// Adjust canvas size and high-DPI scaling
+// Adjust canvas size for high-DPI screens
 function resizeCanvas() {
-    const scaleFactor = window.devicePixelRatio; // For high DPI screens
+    const scaleFactor = window.devicePixelRatio || 1; // For high DPI screens
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    // Set canvas CSS size to the actual width and height
+    // Set canvas CSS size to match the display size
     canvas.style.width = width + 'px';
     canvas.style.height = height + 'px';
 
@@ -269,14 +133,15 @@ function resizeCanvas() {
     canvas.width = width * scaleFactor;
     canvas.height = height * scaleFactor;
 
-    // Ensure context is scaled for high DPI
+    // Apply the scaling factor to the context to maintain consistent drawing
     const ctx = canvas.getContext('2d');
-    ctx.scale(scaleFactor, scaleFactor); // Only scale the drawing context, not the coordinates
+    ctx.scale(scaleFactor, scaleFactor);
 }
 
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
 window.onresize = resizeCanvas;
+
 
 
 
