@@ -21,11 +21,8 @@ body {
     display: block;
     margin: 20px auto;
     background-color: white;
-    width: 100%; /* Full width */
-    height: auto; /* Maintain aspect ratio */
-    max-width: 100%; /* Ensure full width on mobile */
+    max-width: 100%;  /* Full width on mobile */
     max-height: 100%; /* Prevent overflow */
-    border: 2px solid #ccc; /* Optional border for visibility */
 }
 
 
