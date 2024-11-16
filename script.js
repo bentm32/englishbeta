@@ -87,7 +87,7 @@ function getCanvasOffset(e) {
     };
 }
 
-// Start drawing when mouse or touch is pressed
+// Start drawing when mouse is pressed
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
     const { offsetX, offsetY } = getCanvasOffset(e);
@@ -95,6 +95,7 @@ canvas.addEventListener('mousedown', (e) => {
     lastY = offsetY;
 });
 
+// Start drawing when touch starts (for mobile)
 canvas.addEventListener('touchstart', (e) => {
     e.preventDefault(); // Prevent default touch behavior (like scrolling)
     isDrawing = true;
@@ -103,7 +104,7 @@ canvas.addEventListener('touchstart', (e) => {
     lastY = offsetY;
 });
 
-// Draw while mouse or touch is moving
+// Draw while mouse is moving
 canvas.addEventListener('mousemove', (e) => {
     if (!isDrawing) return;
     const { offsetX, offsetY } = getCanvasOffset(e);
@@ -115,6 +116,7 @@ canvas.addEventListener('mousemove', (e) => {
     lastY = offsetY;
 });
 
+// Draw while touch is moving (for mobile)
 canvas.addEventListener('touchmove', (e) => {
     e.preventDefault(); // Prevent default touch behavior
     if (!isDrawing) return;
@@ -127,11 +129,12 @@ canvas.addEventListener('touchmove', (e) => {
     lastY = offsetY;
 });
 
-// Stop drawing when mouse or touch is released
+// Stop drawing when mouse is released
 canvas.addEventListener('mouseup', () => {
     isDrawing = false;
 });
 
+// Stop drawing when touch ends (for mobile)
 canvas.addEventListener('touchend', () => {
     isDrawing = false;
 });
