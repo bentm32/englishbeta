@@ -71,81 +71,100 @@ particlesJS('particles-js', {
   });
   
   // Get canvas element and set up drawing context
-const canvas = document.getElementById('drawingCanvas');
-const ctx = canvas.getContext('2d');
+  const canvas = document.getElementById('drawingCanvas');
+  const ctx = canvas.getContext('2d');
+  
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  
+  // Start drawing when mouse is pressed
+  canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      lastX = e.offsetX;
+      lastY = e.offsetY;
+  });
+  
+  // Draw while mouse is moving
+  canvas.addEventListener('mousemove', (e) => {
+      if (!isDrawing) return;
+      const currentX = e.offsetX;
+      const currentY = e.offsetY;
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(currentX, currentY);
+      ctx.stroke();
+      lastX = currentX;
+      lastY = currentY;
+  });
+  
+  // Stop drawing when mouse is released
+  canvas.addEventListener('mouseup', () => {
+      isDrawing = false;
+  });
+  
+  // Optionally, clear the canvas
+  document.getElementById('clearCanvas').addEventListener('click', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  });
+  
+  // Handle submit button click
+const submitButton = document.getElementById('submitDrawing');
+submitButton.addEventListener('click', () => {
+    const drawingDataUrl = canvas.toDataURL(); // Convert canvas to image
 
-let isDrawing = false;
-let lastX = 0;
-let lastY = 0;
-
-// Get canvas position relative to the window for offset calculation
-function getCanvasOffset(e) {
-    const rect = canvas.getBoundingClientRect();
-    return {
-        offsetX: e.clientX - rect.left,
-        offsetY: e.clientY - rect.top
-    };
-}
-
-// Start drawing when mouse is pressed
-canvas.addEventListener('mousedown', (e) => {
-    isDrawing = true;
-    const { offsetX, offsetY } = getCanvasOffset(e);
-    lastX = offsetX;
-    lastY = offsetY;
+    // Save to Firebase
+    const stickFigureRef = firebase.database().ref('stickFigures');
+    stickFigureRef.push({ imageUrl: drawingDataUrl }).then(() => {
+        // Clear the canvas after submitting
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
 });
 
-// Start drawing when touch starts (for mobile)
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // Prevent default touch behavior (like scrolling)
-    isDrawing = true;
-    const { offsetX, offsetY } = getCanvasOffset(e.touches[0]);
-    lastX = offsetX;
-    lastY = offsetY;
-});
-
-// Draw while mouse is moving
-canvas.addEventListener('mousemove', (e) => {
-    if (!isDrawing) return;
-    const { offsetX, offsetY } = getCanvasOffset(e);
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(offsetX, offsetY);
-    ctx.stroke();
-    lastX = offsetX;
-    lastY = offsetY;
-});
-
-// Draw while touch is moving (for mobile)
-canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault(); // Prevent default touch behavior
-    if (!isDrawing) return;
-    const { offsetX, offsetY } = getCanvasOffset(e.touches[0]);
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(offsetX, offsetY);
-    ctx.stroke();
-    lastX = offsetX;
-    lastY = offsetY;
-});
-
-// Stop drawing when mouse is released
-canvas.addEventListener('mouseup', () => {
-    isDrawing = false;
-});
-
-// Stop drawing when touch ends (for mobile)
-canvas.addEventListener('touchend', () => {
-    isDrawing = false;
-});
-
-// Optionally, clear the canvas
-document.getElementById('clearCanvas').addEventListener('click', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-});
-
-// Resize canvas based on window size
+  
+  // Function to update and display all stick figures from Firebase
+  function updateStickFigures() {
+      const stickFigureContainer = document.getElementById('stick-figure-container');
+  
+      // Get all stick figures from Firebase
+      const stickFiguresRef = firebase.database().ref('stickFigures');
+      stickFiguresRef.on('child_added', (snapshot) => {
+          const stickFigureData = snapshot.val();
+          if (stickFigureData && stickFigureData.imageUrl) {
+              const imgElement = document.createElement('img');
+              imgElement.src = stickFigureData.imageUrl;
+              imgElement.classList.add('stick-figure');
+              stickFigureContainer.appendChild(imgElement);
+          }
+      });
+  
+      // Optional: Listen for changes if you want to update dynamically
+      stickFiguresRef.on('child_changed', (snapshot) => {
+          const stickFigureData = snapshot.val();
+          // Handle updated data if needed
+      });
+  }
+  
+  // Initial call to load existing stick figures
+  updateStickFigures();
+  
+  // Firebase configuration and initialization
+  var firebaseConfig = {
+      apiKey: "AIzaSyBqz7fjMJVd1lstR-sdTgd-sS1YUui3pN0",
+      authDomain: "englishproject-810af.firebaseapp.com",
+      databaseURL: "https://englishproject-810af-default-rtdb.firebaseio.com",
+      projectId: "englishproject-810af",
+      storageBucket: "englishproject-810af.firebasestorage.app",
+      messagingSenderId: "958433136274",
+      appId: "1:958433136274:web:f7574ec8e517451269204b",
+      measurementId: "G-N1J6SFJV5E"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var database = firebase.database();
+  
+// Dynamically set the canvas size based on window width
 function resizeCanvas() {
+    const canvas = document.getElementById('drawingCanvas');
     const width = window.innerWidth * 0.9; // 90% of the window width
     const height = window.innerHeight * 0.4; // 40% of the window height
 
@@ -156,3 +175,5 @@ function resizeCanvas() {
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
 window.onresize = resizeCanvas;
+
+
