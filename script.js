@@ -162,3 +162,16 @@ submitButton.addEventListener('click', () => {
   firebase.initializeApp(firebaseConfig);
   var database = firebase.database();
   
+  // Dynamically set the canvas size based on window width
+function resizeCanvas() {
+    const canvas = document.getElementById('drawingCanvas');
+    const width = window.innerWidth * 0.9; // 90% of the window width
+    const height = window.innerHeight * 0.4; // 40% of the window height
+
+    canvas.width = width;
+    canvas.height = height;
+}
+
+// Call resizeCanvas on load and window resize
+window.onload = resizeCanvas;
+window.onresize = resizeCanvas;
