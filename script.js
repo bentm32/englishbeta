@@ -1,37 +1,26 @@
 // Firebase Realtime Database interaction (using Firebase v8.x)
 
-// Example function to update stick figures
-function updateStickFigures(count) {
+// Example function to display stick figures stored in Firebase
+function updateStickFigures() {
     const container = document.getElementById('stick-figure-container');
     container.innerHTML = ''; // Clear previous stick figures
 
-    // Loop to create and append images
-    for (let i = 0; i < count; i++) {
-        const stickFigure = document.createElement('img');
-        stickFigure.classList.add('stick-figure');
-        stickFigure.src = 'stick-figure.jpg'; // Path to your image
-
-        // Append the image to the container
-        container.appendChild(stickFigure);
-    }
+    // Reference to the 'stickFigures' in Firebase database
+    const stickFigureRef = firebase.database().ref('stickFigures');
+    
+    stickFigureRef.once('value', (snapshot) => {
+        const drawings = snapshot.val();
+        if (drawings) {
+            for (let key in drawings) {
+                const stickFigureData = drawings[key];
+                const stickFigure = document.createElement('img');
+                stickFigure.src = stickFigureData.imageUrl;
+                stickFigure.classList.add('stick-figure');
+                container.appendChild(stickFigure);
+            }
+        }
+    });
 }
-
-// Reference to the 'visitCount' in Firebase database
-var visitCountRef = firebase.database().ref('visitCount');
-
-// Increment the visit count every time the page loads
-visitCountRef.transaction(count => {
-    if (count === null) {
-        return 1; // If no visits, set to 1
-    } else {
-        return count + 1; // Otherwise, increment the count
-    }
-}).then(result => {
-    const newCount = result.snapshot.val();
-    updateStickFigures(newCount);
-}).catch(error => {
-    console.error("Error updating visit count:", error);
-});
 
 // Get canvas element and set up drawing context
 const canvas = document.getElementById('drawingCanvas');
@@ -73,13 +62,11 @@ document.getElementById('clearCanvas').addEventListener('click', () => {
 
 // Handle submit button click
 const submitButton = document.getElementById('submitDrawing');
-const stickFigureContainer = document.getElementById('stick-figure-container');
-const stickFigureRef = firebase.database().ref('stickFigures');
-
 submitButton.addEventListener('click', () => {
     const drawingDataUrl = canvas.toDataURL(); // Convert canvas to image
 
     // Save to Firebase
+    const stickFigureRef = firebase.database().ref('stickFigures');
     stickFigureRef.push({ imageUrl: drawingDataUrl }).then(() => {
         // Create an image element for the new drawing
         const stickFigure = document.createElement('img');
@@ -87,28 +74,26 @@ submitButton.addEventListener('click', () => {
         stickFigure.classList.add('stick-figure');
 
         // Append the new image to the container
-        stickFigureContainer.appendChild(stickFigure);
+        document.getElementById('stick-figure-container').appendChild(stickFigure);
 
         // Clear the canvas after submitting
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
 });
 
-// Function to display all stick figures from Firebase on page load
-function loadStickFigures() {
-    stickFigureRef.once('value', (snapshot) => {
-        const drawings = snapshot.val();
-        if (drawings) {
-            for (let key in drawings) {
-                const stickFigureData = drawings[key];
-                const stickFigure = document.createElement('img');
-                stickFigure.src = stickFigureData.imageUrl;
-                stickFigure.classList.add('stick-figure');
-                stickFigureContainer.appendChild(stickFigure);
-            }
-        }
-    });
-}
+// Load and display all stored drawings from Firebase
+updateStickFigures();
 
-// Call to load stick figures on page load
-loadStickFigures();
+// Firebase configuration and initialization
+var firebaseConfig = {
+    apiKey: "AIzaSyBqz7fjMJVd1lstR-sdTgd-sS1YUui3pN0",
+    authDomain: "englishproject-810af.firebaseapp.com",
+    databaseURL: "https://englishproject-810af-default-rtdb.firebaseio.com",
+    projectId: "englishproject-810af",
+    storageBucket: "englishproject-810af.firebasestorage.app",
+    messagingSenderId: "958433136274",
+    appId: "1:958433136274:web:f7574ec8e517451269204b",
+    measurementId: "G-N1J6SFJV5E"
+};
+firebase.initializeApp(firebaseConfig);
+var database = firebase.database();
