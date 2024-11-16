@@ -1,11 +1,13 @@
+/* General Body Style */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     padding: 20px;
-    background-color: #808080; /* Gray background for the whole page */
+    background-color: #808080;
     margin: 0;
 }
 
+/* Stick figure container styling */
 #stick-figure-container {
     display: flex;
     flex-wrap: wrap;
@@ -13,34 +15,75 @@ body {
     margin-top: 20px;
 }
 
+/* Drawing canvas */
 #drawingCanvas {
     border: none;
     display: block;
     margin: 20px auto;
-    background-color: white; /* White background for the drawing canvas */
+    background-color: white;
+    width: 100%; /* Ensure canvas is responsive */
+    max-width: 500px; /* Maximum size for canvas */
+    height: auto; /* Maintain aspect ratio */
 }
 
+/* Buttons */
 button {
     display: block;
     margin: 20px auto;
 }
 
+/* Particles background */
 #particles-js {
-    position: fixed; /* Make it fixed in place to cover the background */
+    position: fixed;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    z-index: -1; /* Ensure particles are behind other content */
+    z-index: -1;
 }
 
+/* Particles canvas */
 #particles-js canvas {
-    display: block; /* Prevents extra spacing */
+    display: block;
     width: 100%;
     height: 100%;
 }
 
+/* Paragraph text */
 p {
-    color: #333; /* Text color */
+    color: #333;
     font-size: 18px;
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+    p {
+        font-size: 16px; /* Smaller text on mobile */
+        padding: 10px; /* Add some padding for text */
+    }
+    #drawingCanvas {
+        max-width: 90%; /* Adjust canvas width for smaller screens */
+        height: auto;
+    }
+    button {
+        padding: 12px 20px; /* Larger buttons for mobile users */
+    }
+    #stick-figure-container {
+        flex-direction: column; /* Stack stick figures vertically on small screens */
+        align-items: center;
+    }
+}
+
+/* For very small screens like phones in portrait mode */
+@media (max-width: 480px) {
+    p {
+        font-size: 14px; /* Further reduce text size */
+        line-height: 1.4; /* Increase line height for readability */
+    }
+    #drawingCanvas {
+        max-width: 100%; /* Full width canvas on small screens */
+    }
+    button {
+        width: 90%; /* Make buttons more touch-friendly */
+    }
 }
