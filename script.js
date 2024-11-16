@@ -165,14 +165,15 @@ submitButton.addEventListener('click', () => {
 // Dynamically set the canvas size based on window width
 function resizeCanvas() {
     const canvas = document.getElementById('drawingCanvas');
-    const width = window.innerWidth * 0.85; // 85% of the window width
+    const width = window.innerWidth * 0.9; // 90% of the window width
     const height = window.innerHeight * 0.4; // 40% of the window height
 
     canvas.width = width;
-    canvas.height = Math.min(height, 400); // Ensure canvas height doesn't exceed 400px
+    canvas.height = height;
 }
 
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
 window.onresize = resizeCanvas;
+
 
