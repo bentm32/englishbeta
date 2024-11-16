@@ -5,9 +5,9 @@ body {
     padding: 20px;
     background-color: #808080;
     margin: 0;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    overflow-y: auto;  /* Ensure vertical scrolling is allowed */
-    height: 100vh; /* Ensure the body height is 100% of the viewport height */
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100vh;
 }
 
 /* Particles background */
@@ -18,29 +18,22 @@ body {
     top: 0;
     left: 0;
     z-index: -1;
-    pointer-events: none; /* Allow interactions with other content */
+    pointer-events: none;
 }
 
-/* Canvas resizing */
+/* Drawing canvas */
 #drawingCanvas {
     border: none;
     display: block;
     margin: 20px auto;
     background-color: white;
     width: 90%;
-    max-width: 500px;
-    max-height: 400px;
+    max-width: 800px; /* Increase max width for desktop */
     height: auto;
+    max-height: 500px; /* Increase max height for desktop */
 }
 
-/* Submit Button Styling */
-button {
-    display: block;
-    margin: 20px auto;
-    padding: 12px 20px;
-}
-
-/* Stick figure container styling */
+/* Stick figure container */
 #stick-figure-container {
     display: flex;
     flex-wrap: wrap;
@@ -48,11 +41,18 @@ button {
     margin-top: 20px;
 }
 
-/* Stick figure images - limit size */
+/* Stick figure image size */
 #stick-figure-container img {
-    width: 100px; /* Set max size for images */
-    height: auto; /* Keep aspect ratio */
+    width: 150px; /* Increase size on desktop */
+    height: auto;
     margin: 10px;
+}
+
+/* Buttons */
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 20px;
 }
 
 /* Media Queries for Mobile Responsiveness */
@@ -75,7 +75,6 @@ button {
     }
 }
 
-/* For very small screens like phones in portrait mode */
 @media (max-width: 480px) {
     p {
         font-size: 14px;
