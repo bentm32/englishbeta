@@ -5,7 +5,7 @@ body {
     padding: 20px;
     background-color: #808080;
     margin: 0;
-    overflow: hidden; /* Prevent scrolling on mobile */
+    overflow-x: hidden; /* Prevent scrolling on mobile */
 }
 
 /* Stick figure container styling */
@@ -59,6 +59,7 @@ button {
     top: 0;
     left: 0;
     z-index: -1;
+    overflow: hidden;
 }
 
 /* Particles canvas */
