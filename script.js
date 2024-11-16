@@ -78,13 +78,14 @@ let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
-// Function to calculate mouse/touch position (scales for device pixel ratio)
+// Function to calculate mouse/touch position (no scaling for position)
 function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
     const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
     const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
-    return { x: x * window.devicePixelRatio, y: y * window.devicePixelRatio }; // Ensure scaling for mobile
+    return { x, y }; // No devicePixelRatio scaling for cursor position
 }
+
 
 // Start drawing when mouse or touch starts
 function startDrawing(e) {
@@ -142,28 +143,47 @@ submitButton.addEventListener('click', () => {
 });
 
   
-  // Function to update and display all stick figures from Firebase
-  function updateStickFigures() {
-      const stickFigureContainer = document.getElementById('stick-figure-container');
-  
-      // Get all stick figures from Firebase
-      const stickFiguresRef = firebase.database().ref('stickFigures');
-      stickFiguresRef.on('child_added', (snapshot) => {
-          const stickFigureData = snapshot.val();
-          if (stickFigureData && stickFigureData.imageUrl) {
-              const imgElement = document.createElement('img');
-              imgElement.src = stickFigureData.imageUrl;
-              imgElement.classList.add('stick-figure');
-              stickFigureContainer.appendChild(imgElement);
-          }
-      });
-  
-      // Optional: Listen for changes if you want to update dynamically
-      stickFiguresRef.on('child_changed', (snapshot) => {
-          const stickFigureData = snapshot.val();
-          // Handle updated data if needed
-      });
-  }
+  // Function to resize the image before displaying it
+function resizeImage(imageUrl, width, height) {
+    const img = new Image();
+    img.src = imageUrl;
+
+    return new Promise((resolve) => {
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas dimensions to match the desired width and height
+            canvas.width = width;
+            canvas.height = height;
+
+            // Draw the image at the desired size
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL()); // Return resized image as a Data URL
+        };
+    });
+}
+
+// Update the updateStickFigures function to scale the drawings when displaying
+function updateStickFigures() {
+    const stickFigureContainer = document.getElementById('stick-figure-container');
+    
+    // Get all stick figures from Firebase
+    const stickFiguresRef = firebase.database().ref('stickFigures');
+    stickFiguresRef.on('child_added', async (snapshot) => {
+        const stickFigureData = snapshot.val();
+        if (stickFigureData && stickFigureData.imageUrl) {
+            const imgElement = document.createElement('img');
+            
+            // Resize the image before displaying
+            const resizedImageUrl = await resizeImage(stickFigureData.imageUrl, window.innerWidth * 0.8, window.innerHeight * 0.3);
+            imgElement.src = resizedImageUrl;
+            imgElement.classList.add('stick-figure');
+            stickFigureContainer.appendChild(imgElement);
+        }
+    });
+}
+
   
   // Initial call to load existing stick figures
   updateStickFigures();
