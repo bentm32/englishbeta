@@ -81,22 +81,33 @@ let lastY = 0;
 // Start drawing when mouse is pressed
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
-    // Get canvas's position relative to the page, including scroll offset
+
+    // Get canvas's position relative to the page
     const canvasRect = canvas.getBoundingClientRect();
-    lastX = e.clientX - canvasRect.left + window.scrollX; // Add scroll offset
-    lastY = e.clientY - canvasRect.top + window.scrollY; // Add scroll offset
+
+    // Calculate mouse position relative to the canvas
+    lastX = e.clientX - canvasRect.left; // Subtract the left offset
+    lastY = e.clientY - canvasRect.top;  // Subtract the top offset
 });
 
 // Draw while mouse is moving
 canvas.addEventListener('mousemove', (e) => {
     if (!isDrawing) return;
+
+    // Get canvas's position again (in case it moves)
     const canvasRect = canvas.getBoundingClientRect();
-    const currentX = e.clientX - canvasRect.left + window.scrollX; // Add scroll offset
-    const currentY = e.clientY - canvasRect.top + window.scrollY; // Add scroll offset
+
+    // Calculate current mouse position relative to the canvas
+    const currentX = e.clientX - canvasRect.left;
+    const currentY = e.clientY - canvasRect.top;
+
+    // Draw line based on the calculated positions
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
     ctx.lineTo(currentX, currentY);
     ctx.stroke();
+
+    // Update last position for the next draw call
     lastX = currentX;
     lastY = currentY;
 });
@@ -111,7 +122,6 @@ document.getElementById('clearCanvas').addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
-  
   // Handle submit button click
 const submitButton = document.getElementById('submitDrawing');
 submitButton.addEventListener('click', () => {
