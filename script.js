@@ -43,7 +43,7 @@ particlesJS('particles-js', {
       },
       move: {
         enable: true,
-        speed: 3,
+        speed: 6,
         direction: "none",
         random: true,
         straight: false,
@@ -133,6 +133,9 @@ particlesJS('particles-js', {
   function updateStickFigures() {
       const stickFigureContainer = document.getElementById('stick-figure-container');
   
+      // Clear the container to prevent duplicates
+      stickFigureContainer.innerHTML = '';
+  
       // Get all stick figures from Firebase
       const stickFiguresRef = firebase.database().ref('stickFigures');
       stickFiguresRef.on('child_added', (snapshot) => {
@@ -147,25 +150,5 @@ particlesJS('particles-js', {
   
       // Optional: Listen for changes if you want to update dynamically
       stickFiguresRef.on('child_changed', (snapshot) => {
-          const stickFigureData = snapshot.val();
-          // Handle updated data if needed
-      });
-  }
-  
-  // Initial call to load existing stick figures
-  updateStickFigures();
-  
-  // Firebase configuration and initialization
-  var firebaseConfig = {
-      apiKey: "AIzaSyBqz7fjMJVd1lstR-sdTgd-sS1YUui3pN0",
-      authDomain: "englishproject-810af.firebaseapp.com",
-      databaseURL: "https://englishproject-810af-default-rtdb.firebaseio.com",
-      projectId: "englishproject-810af",
-      storageBucket: "englishproject-810af.firebasestorage.app",
-      messagingSenderId: "958433136274",
-      appId: "1:958433136274:web:f7574ec8e517451269204b",
-      measurementId: "G-N1J6SFJV5E"
-  };
-  firebase.initializeApp(firebaseConfig);
-  var database = firebase.database();
+          const s
   
