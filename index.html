@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Exploration</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
 </head>
-<div id="particles-js"></div>
 <body>
+    <div id="particles-js"></div>
     <p>Exploration is not just an action we take, but a lifestyle we pursue.</p>
     <p>Are you here out of coincidence, boredom, or just sheer luck?</p>
-    <p>Maybe you wanted to push the boundaries a bit, seeking some for of sensation or adventure.</p>
+    <p>Maybe you wanted to push the boundaries a bit, seeking some form of sensation or adventure.</p>
     <p>Maybe you have always been one to explore, to go to odd places, just for the sake of it.</p>
     <p>Maybe you identify yourself as an explorer, going places just for the sake of it.</p>
-    <p>The fact you took the time to scan this QR code speaks for your curiousity in and of itself.</p>
-    
+    <p>The fact you took the time to scan this QR code speaks for your curiosity in and of itself.</p>
 
     <canvas id="drawingCanvas" width="500" height="500" style="border:1px solid #000;"></canvas>
     <button id="clearCanvas">Clear Drawing</button>
-
-    <!-- Container for stick figures -->
+    <button id="submitDrawing">Submit Drawing</button>
+    
+    <!-- Container for submitted stick figures -->
     <div id="stick-figure-container"></div>
 
     <!-- Include Firebase v8.x SDK -->
@@ -34,17 +34,17 @@
             authDomain: "englishproject-810af.firebaseapp.com",
             databaseURL: "https://englishproject-810af-default-rtdb.firebaseio.com",
             projectId: "englishproject-810af",
-              storageBucket: "englishproject-810af.firebasestorage.app",
-              messagingSenderId: "958433136274",
-              appId: "1:958433136274:web:f7574ec8e517451269204b",
-              measurementId: "G-N1J6SFJV5E"
+            storageBucket: "englishproject-810af.firebasestorage.app",
+            messagingSenderId: "958433136274",
+            appId: "1:958433136274:web:f7574ec8e517451269204b",
+            measurementId: "G-N1J6SFJV5E"
         };
         
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         var database = firebase.database();
     </script>
-    
+
     <!-- Link to your script file -->
     <script src="script.js"></script>
 </body>

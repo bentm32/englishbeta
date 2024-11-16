@@ -35,17 +35,6 @@ button {
     z-index: -1;
 }
 
-@keyframes backgroundAnimation {
-    0% {
-        background-color: #ffcccb; /* light pink */
-    }
-    50% {
-        background-color: #a9c9ff; /* light blue */
-    }
-    100% {
-        background-color: #98ff98; /* light green */
-    }
-}
 
 body {
     font-family: Arial, sans-serif;

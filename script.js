@@ -1,54 +1,23 @@
-// Firebase Realtime Database interaction (using Firebase v8.x)
-
-// Example function to update stick figures
-function updateStickFigures(count) {
-    const container = document.getElementById('stick-figure-container');
-    container.innerHTML = ''; // Clear previous stick figures
-
-    // Loop to create and append images
-    for (let i = 0; i < count; i++) {
-        const stickFigure = document.createElement('img');
-        stickFigure.classList.add('stick-figure');
-        stickFigure.src = 'stick-figure.jpg'; // Path to your image
-
-        // Append the image to the container
-        container.appendChild(stickFigure);
-    }
-}
-
-// Reference to the 'visitCount' in Firebase database
-var visitCountRef = firebase.database().ref('visitCount');
-
-// Increment the visit count every time the page loads
-visitCountRef.transaction(count => {
-    if (count === null) {
-        return 1; // If no visits, set to 1
-    } else {
-        return count + 1; // Otherwise, increment the count
-    }
-}).then(result => {
-    const newCount = result.snapshot.val();
-    updateStickFigures(newCount);
-}).catch(error => {
-    console.error("Error updating visit count:", error);
-});
-
-// Get canvas element and set up drawing context
+// Firebase reference for storing and retrieving stick figures
+const stickFigureRef = firebase.database().ref('stickFigures');
 const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d');
+const submitButton = document.getElementById('submitDrawing');
+const stickFigureContainer = document.getElementById('stick-figure-container');
 
+// Initialize the drawing state
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
-// Start drawing when mouse is pressed
+// Start drawing on mouse down
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
     lastX = e.offsetX;
     lastY = e.offsetY;
 });
 
-// Draw while mouse is moving
+// Draw on mouse move
 canvas.addEventListener('mousemove', (e) => {
     if (!isDrawing) return;
     const currentX = e.offsetX;
@@ -61,61 +30,53 @@ canvas.addEventListener('mousemove', (e) => {
     lastY = currentY;
 });
 
-// Stop drawing when mouse is released
+// Stop drawing on mouse up
 canvas.addEventListener('mouseup', () => {
     isDrawing = false;
 });
 
-// Optionally, clear the canvas
+// Clear the canvas
 document.getElementById('clearCanvas').addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
-particlesJS('particles-js', {
-    particles: {
-        number: {
-            value: 100,
-            density: {
-                enable: true,
-                value_area: 800
-            }
-        },
-        size: {
-            value: 3,
-            random: true,
-            anim: {
-                enable: true,
-                speed: 4,
-                size_min: 0.1
-            }
-        },
-        move: {
-            enable: true,
-            speed: 1,
-            direction: "random",
-            random: true,
-            straight: false,
-            out_mode: "out"
-        },
-        shape: {
-            type: "circle"
-        },
-        opacity: {
-            value: 0.5,
-            random: true,
-            anim: {
-                enable: true,
-                speed: 1,
-                opacity_min: 0.1
-            }
-        }
-    },
-    interactivity: {
-        events: {
-            onhover: {
-                enable: true,
-                mode: "repulse"
-            }
-        }
-    }
+// Handle submit button click
+submitButton.addEventListener('click', () => {
+    // Convert canvas drawing to an image (data URL)
+    const drawingDataUrl = canvas.toDataURL();
+
+    // Save the drawing to Firebase
+    stickFigureRef.push({
+        imageUrl: drawingDataUrl
+    }).then(() => {
+        // Create an image element for the new drawing
+        const stickFigure = document.createElement('img');
+        stickFigure.src = drawingDataUrl;
+        stickFigure.classList.add('stick-figure'); // Add styling class
+
+        // Append the new image to the container
+        stickFigureContainer.appendChild(stickFigure);
+
+        // Clear the canvas after submitting
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
 });
+
+// Function to display all stick figures from Firebase when the page loads
+function loadStickFigures() {
+    stickFigureRef.once('value', (snapshot) => {
+        const drawings = snapshot.val();
+        if (drawings) {
+            for (let key in drawings) {
+                const stickFigureData = drawings[key];
+                const stickFigure = document.createElement('img');
+                stickFigure.src = stickFigureData.imageUrl;
+                stickFigure.classList.add('stick-figure');
+                stickFigureContainer.appendChild(stickFigure);
+            }
+        }
+    });
+}
+
+// Call the function to load stick figures on page load
+loadStickFigures();
