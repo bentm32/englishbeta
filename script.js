@@ -84,44 +84,49 @@ let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
-// Start drawing when mouse is pressed
-canvas.addEventListener('mousedown', (e) => {
+// Function to calculate mouse/touch position
+function getPosition(e) {
+    const canvasRect = canvas.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
+    const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
+    return { x: x * scale, y: y * scale }; // Scale for high-DPI screens
+}
+
+// Start drawing when mouse or touch starts
+function startDrawing(e) {
+    e.preventDefault(); // Prevent default action (scroll, zoom, etc.)
     isDrawing = true;
+    const { x, y } = getPosition(e);
+    lastX = x;
+    lastY = y;
+}
 
-    // Get canvas's position relative to the page
-    const canvasRect = canvas.getBoundingClientRect();
-
-    // Calculate mouse position relative to the canvas
-    lastX = (e.clientX - canvasRect.left) * scale; // Subtract left offset and scale
-    lastY = (e.clientY - canvasRect.top) * scale;  // Subtract top offset and scale
-});
-
-// Draw while mouse is moving
-canvas.addEventListener('mousemove', (e) => {
+// Draw while mouse or touch moves
+function draw(e) {
     if (!isDrawing) return;
-
-    // Get canvas's position relative to the page
-    const canvasRect = canvas.getBoundingClientRect();
-
-    // Calculate current mouse position relative to the canvas
-    const currentX = (e.clientX - canvasRect.left) * scale;
-    const currentY = (e.clientY - canvasRect.top) * scale;
-
-    // Draw line based on the calculated positions
+    const { x, y } = getPosition(e);
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
-    ctx.lineTo(currentX, currentY);
+    ctx.lineTo(x, y);
     ctx.stroke();
+    lastX = x;
+    lastY = y;
+}
 
-    // Update last position for the next draw call
-    lastX = currentX;
-    lastY = currentY;
-});
-
-// Stop drawing when mouse is released
-canvas.addEventListener('mouseup', () => {
+// Stop drawing when mouse or touch ends
+function stopDrawing(e) {
     isDrawing = false;
-});
+}
+
+// Mouse events
+canvas.addEventListener('mousedown', startDrawing);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDrawing);
+
+// Touch events
+canvas.addEventListener('touchstart', startDrawing);
+canvas.addEventListener('touchmove', draw);
+canvas.addEventListener('touchend', stopDrawing);
 
 // Optionally, clear the canvas
 document.getElementById('clearCanvas').addEventListener('click', () => {
