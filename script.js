@@ -80,15 +80,15 @@ let lastY = 0;
 
 function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
+    
+    // For touch events, use touches[0], for mouse events, use clientX/Y
+    const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
+    const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
+    
+    // Adjust the coordinates for scaling on high-DPI screens
     const scaleFactor = window.devicePixelRatio;
-
-    // For touch events, use touches[0]
-    const x = (e.touches[0].clientX - canvasRect.left) * scaleFactor;
-    const y = (e.touches[0].clientY - canvasRect.top) * scaleFactor;
-
-    return { x, y };
+    return { x: x * scaleFactor, y: y * scaleFactor };
 }
-
 
 // Modify the event listeners to track touch positions correctly
 canvas.addEventListener('touchstart', (e) => {
@@ -169,6 +169,7 @@ submitButton.addEventListener('click', () => {
 });
 
   
+// Resize image for mobile display
 function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
     const img = new Image();
     img.src = imageUrl;
@@ -183,15 +184,16 @@ function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
             let width = maxWidth;
             let height = maxHeight;
 
+            // Adjust size to fit mobile but with better scaling
             if (img.width > img.height) {
                 height = width / aspectRatio;
             } else {
                 width = height * aspectRatio;
             }
 
-            // Increase max size for mobile for a better display
-            width = Math.min(width, maxWidth * 1.5);
-            height = Math.min(height, maxHeight * 1.5);
+            // Optional: Increase max size for mobile
+            width = Math.min(width, maxWidth * 1.4); // Increased width on small screens
+            height = Math.min(height, maxHeight * 1.4); // Increase height proportionally
 
             canvas.width = width;
             canvas.height = height;
@@ -201,7 +203,6 @@ function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
         };
     });
 }
-
 
 
 
@@ -251,8 +252,8 @@ function resizeCanvas() {
     const height = window.innerHeight;
 
     // Set canvas CSS size to the actual width and height
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
 
     // Set the canvas drawing buffer size (scaled for high-DPI)
     canvas.width = width * scaleFactor;
@@ -262,7 +263,6 @@ function resizeCanvas() {
     const ctx = canvas.getContext('2d');
     ctx.scale(scaleFactor, scaleFactor);
 }
-
 
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
