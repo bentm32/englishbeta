@@ -83,7 +83,7 @@ function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
     const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
     const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
-    return { x: x * window.devicePixelRatio, y: y * window.devicePixelRatio }; // Scale for high-DPI screens
+    return { x: x * window.devicePixelRatio, y: y * window.devicePixelRatio }; // Ensure scaling for mobile
 }
 
 // Start drawing when mouse or touch starts
@@ -192,7 +192,7 @@ function resizeCanvas() {
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
 
-    // Set the actual canvas size for drawing
+    // Set the actual canvas size for drawing (scaling for device pixel ratio)
     canvas.width = width * window.devicePixelRatio; // Scale for high-DPI screens
     canvas.height = height * window.devicePixelRatio; // Scale for high-DPI screens
 
