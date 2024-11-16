@@ -80,15 +80,12 @@ let lastY = 0;
 
 function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
-    
-    // For touch events, use touches[0], for mouse events, use clientX/Y
     const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
     const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
-    
-    // Account for the device pixel ratio for mobile
-    const scaleFactor = window.devicePixelRatio;
-    return { x: x * scaleFactor, y: y * scaleFactor };
+
+    return { x, y }; // No scaling needed here
 }
+
 
 // Modify the event listeners to track touch positions correctly
 canvas.addEventListener('touchstart', (e) => {
@@ -148,6 +145,27 @@ canvas.addEventListener('mouseup', stopDrawing);
 canvas.addEventListener('touchstart', startDrawing);
 canvas.addEventListener('touchmove', draw);
 canvas.addEventListener('touchend', stopDrawing);
+
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const { x, y } = getPosition(e);
+    isDrawing = true;
+    lastX = x;
+    lastY = y;
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!isDrawing) return;
+    const { x, y } = getPosition(e);
+    draw(lastX, lastY, x, y);
+    lastX = x;
+    lastY = y;
+});
+
+canvas.addEventListener('touchend', () => {
+    isDrawing = false;
+});
 
 // Clear canvas
 document.getElementById('clearCanvas').addEventListener('click', () => {
@@ -251,10 +269,11 @@ function resizeCanvas() {
     canvas.width = width * scaleFactor;
     canvas.height = height * scaleFactor;
 
-    // Get the 2d context and scale for high DPI
+    // Ensure context is scaled for high DPI
     const ctx = canvas.getContext('2d');
-    ctx.scale(scaleFactor, scaleFactor);
+    ctx.scale(scaleFactor, scaleFactor); // Only scale the drawing context, not the coordinates
 }
+
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
 window.onresize = resizeCanvas;
