@@ -46,11 +46,12 @@ body {
     }
 }
 
-/* Buttons */
 button {
-    display: block;
-    margin: 20px auto;
+    padding: 12px 20px;
+    font-size: 16px; /* Increase button text size */
+    border-radius: 8px; /* Round button corners */
 }
+
 
 /* Particles background */
 #particles-js {

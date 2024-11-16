@@ -85,12 +85,14 @@ let lastX = 0;
 let lastY = 0;
 
 // Function to calculate mouse/touch position
+// Function to calculate mouse/touch position
 function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
     const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
     const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
-    return { x: x * scale, y: y * scale }; // Scale for high-DPI screens
+    return { x: x * window.devicePixelRatio, y: y * window.devicePixelRatio }; // Ensure scaling for high-DPI screens
 }
+
 
 // Start drawing when mouse or touch starts
 function startDrawing(e) {
@@ -194,12 +196,21 @@ function resizeCanvas() {
     const width = window.innerWidth * 0.9; // 90% of the window width
     const height = window.innerHeight * 0.4; // 40% of the window height
 
-    canvas.width = width;
-    canvas.height = height;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+
+    // Update canvas size to match the display size
+    canvas.width = width * window.devicePixelRatio;
+    canvas.height = height * window.devicePixelRatio;
+
+    // Scale context for high-DPI displays
+    const ctx = canvas.getContext('2d');
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 }
 
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
 window.onresize = resizeCanvas;
+
 
 
