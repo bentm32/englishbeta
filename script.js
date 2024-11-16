@@ -85,7 +85,7 @@ function getPosition(e) {
     const x = (e.clientX || e.touches[0].clientX) - canvasRect.left;
     const y = (e.clientY || e.touches[0].clientY) - canvasRect.top;
     
-    // Account for the device pixel ratio for mobile
+    // Adjust the coordinates for scaling on high-DPI screens
     const scaleFactor = window.devicePixelRatio;
     return { x: x * scaleFactor, y: y * scaleFactor };
 }
@@ -169,7 +169,7 @@ submitButton.addEventListener('click', () => {
 });
 
   
-// Resize the image for better mobile display
+// Resize image for mobile display
 function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
     const img = new Image();
     img.src = imageUrl;
@@ -192,8 +192,8 @@ function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
             }
 
             // Optional: Increase max size for mobile
-            width = Math.min(width, maxWidth * 1.2);
-            height = Math.min(height, maxHeight * 1.2);
+            width = Math.min(width, maxWidth * 1.4); // Increased width on small screens
+            height = Math.min(height, maxHeight * 1.4); // Increase height proportionally
 
             canvas.width = width;
             canvas.height = height;
@@ -203,6 +203,7 @@ function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
         };
     });
 }
+
 
 
 // Use resizeImageForMobile when adding images to the UI
@@ -244,6 +245,7 @@ function updateStickFigures() {
   var database = firebase.database();
 
 // Adjust canvas size and high-DPI scaling
+// Resize canvas to adapt to screen size
 function resizeCanvas() {
     const scaleFactor = window.devicePixelRatio; // For high DPI screens
     const width = window.innerWidth;
@@ -261,6 +263,7 @@ function resizeCanvas() {
     const ctx = canvas.getContext('2d');
     ctx.scale(scaleFactor, scaleFactor);
 }
+
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
 window.onresize = resizeCanvas;
