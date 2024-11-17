@@ -83,13 +83,12 @@ function getPosition(e) {
     const scaleFactor = window.devicePixelRatio || 1; // Get scale factor
     const x = ((e.clientX || e.touches[0].clientX) - canvasRect.left) * scaleFactor;
     const y = ((e.clientY || e.touches[0].clientY) - canvasRect.top) * scaleFactor;
-
     return { x, y }; // Correct the scaling
 }
 
 // Modify the event listeners to track touch positions correctly
 canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default behavior (scrolling, zooming)
     const { x, y } = getPosition(e);
     isDrawing = true;
     lastX = x;
@@ -100,7 +99,7 @@ canvas.addEventListener('touchmove', (e) => {
     e.preventDefault();
     if (!isDrawing) return;
     const { x, y } = getPosition(e);
-    draw(lastX, lastY, x, y);
+    draw(lastX, lastY, x, y); // Update drawing based on new touch coordinates
     lastX = x;
     lastY = y;
 });
@@ -108,6 +107,7 @@ canvas.addEventListener('touchmove', (e) => {
 canvas.addEventListener('touchend', () => {
     isDrawing = false;
 });
+
 
 
 // Start drawing when mouse or touch starts
@@ -248,7 +248,6 @@ function resizeCanvas() {
     const ctx = canvas.getContext('2d');
     ctx.scale(scaleFactor, scaleFactor);
 }
-
 
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
