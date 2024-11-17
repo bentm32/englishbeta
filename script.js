@@ -79,16 +79,17 @@ let lastX = 0;
 let lastY = 0;
 
 function getPosition(e) {
-    const canvasRect = canvas.getBoundingClientRect();
-    const scaleFactor = window.devicePixelRatio || 1;
+  const canvasRect = canvas.getBoundingClientRect();
+  
+  // Get the touch/mouse position relative to the canvas
+  let x = (e.touches ? e.touches[0].clientX : e.clientX) - canvasRect.left;
+  let y = (e.touches ? e.touches[0].clientY : e.clientY) - canvasRect.top;
 
-    // Get the touch position
-    let x = (e.touches ? e.touches[0].clientX : e.clientX) - canvasRect.left;
-    let y = (e.touches ? e.touches[0].clientY : e.clientY) - canvasRect.top;
+  // Scale coordinates to match canvas' internal resolution
+  x *= canvas.width / canvasRect.width;
+  y *= canvas.height / canvasRect.height;
 
-
-
-    return { x, y };
+  return { x, y };
 }
 
 
@@ -240,20 +241,20 @@ function updateStickFigures() {
 
 // Resize canvas to handle high-DPI screens
 function resizeCanvas() {
-    const scaleFactor = window.devicePixelRatio || 1;
-    const width = window.innerWidth;
-    const height = window.innerHeight - 200; // Adjust for UI elements
+  const scaleFactor = window.devicePixelRatio || 1;
+  const width = window.innerWidth;
+  const height = window.innerHeight - 200; // Adjust for UI elements
 
-    // Set canvas size in CSS
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+  // Set canvas size in CSS for visual display
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
 
-    // Adjust internal canvas size for high-DPI displays
-    canvas.width = width * scaleFactor;
-    canvas.height = height * scaleFactor;
+  // Set canvas size for internal resolution
+  canvas.width = width * scaleFactor;
+  canvas.height = height * scaleFactor;
 
-    // Adjust the canvas context for proper scaling
-    ctx.scale(scaleFactor, scaleFactor);
+  // Scale the drawing context to match
+  ctx.scale(scaleFactor, scaleFactor);
 }
 
 
