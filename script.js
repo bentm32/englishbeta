@@ -80,18 +80,19 @@ let lastY = 0;
 
 function getPosition(e) {
   const canvasRect = canvas.getBoundingClientRect();
-  
-  // Get the touch/mouse position relative to the canvas
+  const scaleFactorX = canvas.width / canvasRect.width;
+  const scaleFactorY = canvas.height / canvasRect.height;
+
+  // Calculate coordinates relative to the canvas
   let x = (e.touches ? e.touches[0].clientX : e.clientX) - canvasRect.left;
   let y = (e.touches ? e.touches[0].clientY : e.clientY) - canvasRect.top;
 
-  // Scale coordinates to match canvas' internal resolution
-  x *= canvas.width / canvasRect.width;
-  y *= canvas.height / canvasRect.height;
+  // Normalize coordinates to account for scaling
+  x = Math.round(x * scaleFactorX);
+  y = Math.round(y * scaleFactorY);
 
   return { x, y };
 }
-
 
 // Start drawing when mouse or touch starts
 function startDrawing(e) {
@@ -241,22 +242,21 @@ function updateStickFigures() {
 
 // Resize canvas to handle high-DPI screens
 function resizeCanvas() {
-  const scaleFactor = window.devicePixelRatio || 1;
+  const scaleFactor = Math.round(window.devicePixelRatio) || 1; // Normalize scale
   const width = window.innerWidth;
   const height = window.innerHeight - 200; // Adjust for UI elements
 
-  // Set canvas size in CSS for visual display
+  // Set canvas size in CSS for visual appearance
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
 
-  // Set canvas size for internal resolution
+  // Set internal resolution for the canvas
   canvas.width = width * scaleFactor;
   canvas.height = height * scaleFactor;
 
-  // Scale the drawing context to match
+  // Scale the context to match the resolution
   ctx.scale(scaleFactor, scaleFactor);
 }
-
 
 
 // Call resizeCanvas on load and window resize
