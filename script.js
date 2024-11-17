@@ -80,15 +80,15 @@ let lastY = 0;
 
 function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
-    const scaleFactor = window.devicePixelRatio || 1; // Ensure you get the scale factor correctly
+    const scaleFactor = window.devicePixelRatio || 1;
+
+    // For touch events, use clientX/clientY or touches[0].clientX/clientY
     const x = (e.touches ? e.touches[0].clientX : e.clientX) - canvasRect.left;
     const y = (e.touches ? e.touches[0].clientY : e.clientY) - canvasRect.top;
-    return { x: x * scaleFactor, y: y * scaleFactor }; // Apply scale factor for accurate drawing
+
+    // Adjust for device pixel ratio
+    return { x: x * scaleFactor, y: y * scaleFactor };
 }
-
-
-
-
 
 // Start drawing when mouse or touch starts
 function startDrawing(e) {
@@ -217,7 +217,7 @@ function updateStickFigures() {
 function resizeCanvas() {
     const scaleFactor = window.devicePixelRatio || 1; // For high DPI screens
     const width = window.innerWidth;
-    const height = window.innerHeight;
+    const height = window.innerHeight - 200; // Adjust as needed
 
     // Set canvas CSS size to match window dimensions
     canvas.style.width = width + 'px';
@@ -229,8 +229,9 @@ function resizeCanvas() {
 
     // Adjust context scale for drawing
     const ctx = canvas.getContext('2d');
-    ctx.scale(scaleFactor, scaleFactor);
+    ctx.scale(scaleFactor, scaleFactor); // Ensure the context scales with the canvas
 }
+
 
 
 // Call resizeCanvas on load and window resize
