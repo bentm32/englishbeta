@@ -86,15 +86,9 @@ function getPosition(e) {
     let x = (e.touches ? e.touches[0].clientX : e.clientX) - canvasRect.left;
     let y = (e.touches ? e.touches[0].clientY : e.clientY) - canvasRect.top;
 
-    // Log for debugging the touch positions
-    console.log('Touch Position:', { x, y });
-
     // Correct for scaling (devicePixelRatio)
     x *= scaleFactor;
     y *= scaleFactor;
-
-    // Log adjusted position
-    console.log('Adjusted Touch Position (Scaled):', { x, y });
 
     return { x, y };
 }
@@ -246,22 +240,21 @@ function updateStickFigures() {
   firebase.initializeApp(firebaseConfig);
   var database = firebase.database();
 
-// Adjust canvas size for high-DPI screens
+// Fix the canvas size for high-DPI screens
 function resizeCanvas() {
-    const scaleFactor = window.devicePixelRatio || 1; // For high DPI screens
+    const scaleFactor = window.devicePixelRatio || 1;
     const width = window.innerWidth;
     const height = window.innerHeight - 200; // Adjust as needed
 
-    // Set canvas CSS size to match window dimensions
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
+    // Set canvas CSS size
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
 
-    // Set the internal drawing size of the canvas, scaled for high-DPI displays
+    // Set the internal drawing size of the canvas
     canvas.width = width * scaleFactor;
     canvas.height = height * scaleFactor;
 
     // Adjust context scale for drawing
-    const ctx = canvas.getContext('2d');
     ctx.scale(scaleFactor, scaleFactor); // Ensure the context scales with the canvas
 }
 

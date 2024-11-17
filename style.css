@@ -21,11 +21,11 @@ body {
     display: block;
     margin: 20px auto;
     background-color: white;
-    max-width: 100%;  /* Full width on mobile */
+    width: 100%;  /* Allow the canvas to be fully responsive */
+    height: auto; /* Allow for height to adjust based on the width */
+    max-width: 100%; /* Prevent overflow */
     max-height: 100%; /* Prevent overflow */
 }
-
-
 
 /* For very small screens like phones in portrait mode */
 @media (max-width: 480px) {
@@ -50,7 +50,6 @@ button {
     font-size: 16px; /* Increase button text size */
     border-radius: 8px; /* Round button corners */
 }
-
 
 /* Particles background */
 #particles-js {
