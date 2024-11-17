@@ -87,8 +87,6 @@ function getPosition(e) {
     return { x, y }; // Correct the scaling
 }
 
-
-
 // Modify the event listeners to track touch positions correctly
 canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
@@ -143,27 +141,6 @@ canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', stopDrawing);
 
-
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const { x, y } = getPosition(e);
-    isDrawing = true;
-    lastX = x;
-    lastY = y;
-});
-
-canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    if (!isDrawing) return;
-    const { x, y } = getPosition(e);
-    draw(lastX, lastY, x, y);
-    lastX = x;
-    lastY = y;
-});
-
-canvas.addEventListener('touchend', () => {
-    isDrawing = false;
-});
 
 // Clear canvas
 document.getElementById('clearCanvas').addEventListener('click', () => {
