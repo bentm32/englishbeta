@@ -80,11 +80,12 @@ let lastY = 0;
 
 function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
-    const scaleFactor = window.devicePixelRatio || 1; // Get scale factor
-    const x = ((e.clientX || e.touches[0].clientX) - canvasRect.left) * scaleFactor;
-    const y = ((e.clientY || e.touches[0].clientY) - canvasRect.top) * scaleFactor;
-    return { x, y }; // Correct the scaling
+    const scaleFactor = window.devicePixelRatio || 1; // Ensure you get the scale factor correctly
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - canvasRect.left;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - canvasRect.top;
+    return { x: x * scaleFactor, y: y * scaleFactor }; // Apply scale factor for accurate drawing
 }
+
 
 // Modify the event listeners to track touch positions correctly
 canvas.addEventListener('touchstart', (e) => {
@@ -236,18 +237,19 @@ function resizeCanvas() {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    // Set canvas CSS size to the actual width and height
+    // Set canvas CSS size to match window dimensions
     canvas.style.width = width + 'px';
     canvas.style.height = height + 'px';
 
-    // Set the canvas drawing buffer size (scaled for high-DPI)
+    // Set the internal drawing size of the canvas, scaled for high-DPI displays
     canvas.width = width * scaleFactor;
     canvas.height = height * scaleFactor;
 
-    // Get 2d context and apply scale factor for high-DPI
+    // Adjust context scale for drawing
     const ctx = canvas.getContext('2d');
     ctx.scale(scaleFactor, scaleFactor);
 }
+
 
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
