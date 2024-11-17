@@ -240,22 +240,22 @@ function updateStickFigures() {
   firebase.initializeApp(firebaseConfig);
   var database = firebase.database();
 
-// Fix the canvas size for high-DPI screens
+// Resize canvas to handle high-DPI screens
 function resizeCanvas() {
     const scaleFactor = window.devicePixelRatio || 1;
     const width = window.innerWidth;
-    const height = window.innerHeight - 200; // Adjust as needed
+    const height = window.innerHeight - 200; // Adjust for UI elements
 
-    // Set canvas CSS size
+    // Set canvas size in CSS
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
 
-    // Set the internal drawing size of the canvas
+    // Adjust internal canvas size for high-DPI displays
     canvas.width = width * scaleFactor;
     canvas.height = height * scaleFactor;
 
-    // Adjust context scale for drawing
-    ctx.scale(scaleFactor, scaleFactor); // Ensure the context scales with the canvas
+    // Adjust the canvas context for proper scaling
+    ctx.scale(scaleFactor, scaleFactor);
 }
 
 

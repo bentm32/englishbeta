@@ -21,11 +21,11 @@ body {
     display: block;
     margin: 20px auto;
     background-color: white;
-    width: 100%;  /* Allow the canvas to be fully responsive */
-    height: auto; /* Allow for height to adjust based on the width */
-    max-width: 100%; /* Prevent overflow */
+    max-width: 100%;  /* Full width on mobile */
     max-height: 100%; /* Prevent overflow */
 }
+
+
 
 /* For very small screens like phones in portrait mode */
 @media (max-width: 480px) {
@@ -50,6 +50,7 @@ button {
     font-size: 16px; /* Increase button text size */
     border-radius: 8px; /* Round button corners */
 }
+
 
 /* Particles background */
 #particles-js {
@@ -82,9 +83,9 @@ p {
         padding: 10px;
     }
     #drawingCanvas {
-        width: 85%; /* Smaller canvas on mobile */
-        max-width: 400px; /* Further reduce max width */
-        max-height: 300px; /* Prevent canvas from getting too tall */
+        width: 90%;
+        max-width: 350px;
+        max-height: 250px;
     }
     button {
         padding: 12px 20px;
