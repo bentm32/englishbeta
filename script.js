@@ -89,6 +89,7 @@ function getPosition(e) {
 
 
 
+
 // Start drawing when mouse or touch starts
 function startDrawing(e) {
     e.preventDefault(); // Prevent default action (scroll, zoom, etc.)
@@ -144,7 +145,6 @@ submitButton.addEventListener('click', () => {
 });
 
   
-// Resize the image based on screen size to fit mobile
 function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
     const img = new Image();
     img.src = imageUrl;
@@ -173,6 +173,7 @@ function resizeImageForMobile(imageUrl, maxWidth, maxHeight) {
         };
     });
 }
+
 
 // Use resizeImageForMobile when adding images to the UI
 function updateStickFigures() {
