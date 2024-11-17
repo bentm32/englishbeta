@@ -87,8 +87,8 @@ function getPosition(e) {
     let y = (e.touches ? e.touches[0].clientY : e.clientY) - canvasRect.top;
 
     // Correct for scaling (devicePixelRatio)
-    x *= scaleFactor;
-    y *= scaleFactor;
+    x /= scaleFactor;
+    y /= scaleFactor;
 
     return { x, y };
 }
