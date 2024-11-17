@@ -121,9 +121,32 @@ canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', stopDrawing);
 
-canvas.addEventListener('touchstart', startDrawing);
-canvas.addEventListener('touchmove', draw);
-canvas.addEventListener('touchend', stopDrawing);
+// Start drawing on touch
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevent default touch behavior (scrolling, etc.)
+    isDrawing = true;
+    const { x, y } = getPosition(e);
+    lastX = x;
+    lastY = y;
+});
+
+// Draw while moving the finger
+canvas.addEventListener('touchmove', (e) => {
+    if (!isDrawing) return;
+    const { x, y } = getPosition(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    lastX = x;
+    lastY = y;
+});
+
+// Stop drawing when the touch ends
+canvas.addEventListener('touchend', () => {
+    isDrawing = false;
+});
+
 
 // Clear canvas
 document.getElementById('clearCanvas').addEventListener('click', () => {
