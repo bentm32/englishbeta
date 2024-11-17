@@ -87,30 +87,7 @@ function getPosition(e) {
 }
 
 
-// Modify the event listeners to track touch positions correctly
-canvas.addEventListener('touchstart', (e) => {
-    console.log('Touch start');
-    e.preventDefault(); // Prevent default behavior (scrolling, zooming)
-    const { x, y } = getPosition(e);
-    isDrawing = true;
-    lastX = x;
-    lastY = y;
-});
 
-canvas.addEventListener('touchmove', (e) => {
-    console.log('Touch move');
-    e.preventDefault();
-    if (!isDrawing) return;
-    const { x, y } = getPosition(e);
-    draw(lastX, lastY, x, y); // Update drawing based on new touch coordinates
-    lastX = x;
-    lastY = y;
-});
-
-canvas.addEventListener('touchend', () => {
-    console.log('Touch end');
-    isDrawing = false;
-});
 
 // Start drawing when mouse or touch starts
 function startDrawing(e) {
@@ -143,6 +120,9 @@ canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', stopDrawing);
 
+canvas.addEventListener('touchstart', startDrawing);
+canvas.addEventListener('touchmove', draw);
+canvas.addEventListener('touchend', stopDrawing);
 
 // Clear canvas
 document.getElementById('clearCanvas').addEventListener('click', () => {
