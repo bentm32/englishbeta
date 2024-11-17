@@ -82,13 +82,23 @@ function getPosition(e) {
     const canvasRect = canvas.getBoundingClientRect();
     const scaleFactor = window.devicePixelRatio || 1;
 
-    // For touch events, use clientX/clientY or touches[0].clientX/clientY
-    const x = (e.touches ? e.touches[0].clientX : e.clientX) - canvasRect.left;
-    const y = (e.touches ? e.touches[0].clientY : e.clientY) - canvasRect.top;
+    // Get the touch position
+    let x = (e.touches ? e.touches[0].clientX : e.clientX) - canvasRect.left;
+    let y = (e.touches ? e.touches[0].clientY : e.clientY) - canvasRect.top;
 
-    // Adjust for device pixel ratio
-    return { x: x * scaleFactor, y: y * scaleFactor };
+    // Log for debugging the touch positions
+    console.log('Touch Position:', { x, y });
+
+    // Correct for scaling (devicePixelRatio)
+    x *= scaleFactor;
+    y *= scaleFactor;
+
+    // Log adjusted position
+    console.log('Adjusted Touch Position (Scaled):', { x, y });
+
+    return { x, y };
 }
+
 
 // Start drawing when mouse or touch starts
 function startDrawing(e) {
