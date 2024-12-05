@@ -270,7 +270,13 @@ visitorCountRef.transaction((currentCount) => {
 visitorCountRef.on('value', (snapshot) => {
   const visitorCount = snapshot.val();
   const visitorDisplay = document.getElementById('visitorCountContainer');
-  visitorDisplay.textContent = `Visitor Count: ${visitorCount}`;
+
+  if (visitorDisplay) {
+    // Update the DOM with the visitor count
+    visitorDisplay.textContent = `Visitors: ${visitorCount}`;
+  } else {
+    console.error('Visitor count container element not found!');
+  }
 });
 
 
