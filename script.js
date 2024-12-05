@@ -269,13 +269,10 @@ visitorCountRef.transaction((currentCount) => {
 // Display the visitor count
 visitorCountRef.on('value', (snapshot) => {
   const visitorCount = snapshot.val();
-  const visitorDisplay = document.createElement('p');
-  visitorDisplay.id = 'visitorCount';
+  const visitorDisplay = document.getElementById('visitorCountContainer');
   visitorDisplay.textContent = `Visitor Count: ${visitorCount}`;
-  document.body.prepend(visitorDisplay); // Add to the top of the page
 });
 
-document.getElementById('visitorCountContainer').textContent = `Visitor Count: ${visitorCount}`;
 
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
