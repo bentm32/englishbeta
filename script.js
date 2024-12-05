@@ -258,39 +258,31 @@ function resizeCanvas() {
   ctx.scale(scaleFactor, scaleFactor);
 }
 
-// Reference to the visitor count node in Firebase
-const visitorCountRef = firebase.database().ref('visitorCount');
+// Reference to the visitor counter in Firebase
+var visitorCountRef = database.ref('visitorCount');
 
-// Increment visitor count on page load
-visitorCountRef.transaction((currentCount) => {
-  return (currentCount || 0) + 1; // Increment or initialize to 1 if null
-});
+// Increment visitor count and display it
+function incrementVisitorCount() {
+    // Increment the visitor count by 1
+    visitorCountRef.transaction(function(currentCount) {
+        return (currentCount || 0) + 1;
+    });
+}
 
-// Display the visitor count
-visitorCountRef.on('value', (snapshot) => {
-  const visitorCount = snapshot.val();
-  const visitorDisplay = document.getElementById('visitorCountContainer');
+// Update the displayed visitor count on the webpage
+function displayVisitorCount() {
+    visitorCountRef.on('value', function(snapshot) {
+        var count = snapshot.val();
+        // Update the HTML element with the current visitor count
+        document.getElementById('visitorCount').innerText = "Visitors: " + count;
+    });
+}
 
-  if (visitorDisplay) {
-    // Update the DOM with the visitor count
-    visitorDisplay.textContent = `Visitors: ${visitorCount}`;
-  } else {
-    console.error('Visitor count container element not found!');
-  }
-});
-
-visitorCountRef.once('value', (snapshot) => {
-  const currentCount = snapshot.val();
-  if (currentCount !== null) {
-      visitorCountRef.transaction((currentCount) => {
-          return (currentCount || 0) + 1;
-      });
-  } else {
-      visitorCountRef.set(1); // Initialize with 1 if no data exists
-  }
-});
-
-
+// Call the functions when the page loads
+window.onload = function() {
+    incrementVisitorCount(); // Increment count when the page loads
+    displayVisitorCount(); // Display updated count
+};
 
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
