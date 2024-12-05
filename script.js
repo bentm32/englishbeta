@@ -279,6 +279,18 @@ visitorCountRef.on('value', (snapshot) => {
   }
 });
 
+visitorCountRef.once('value', (snapshot) => {
+  const currentCount = snapshot.val();
+  if (currentCount !== null) {
+      visitorCountRef.transaction((currentCount) => {
+          return (currentCount || 0) + 1;
+      });
+  } else {
+      visitorCountRef.set(1); // Initialize with 1 if no data exists
+  }
+});
+
+
 
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
