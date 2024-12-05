@@ -258,32 +258,6 @@ function resizeCanvas() {
   ctx.scale(scaleFactor, scaleFactor);
 }
 
-// Reference to the visitor counter in Firebase
-var visitorCountRef = database.ref('visitorCount');
-
-// Increment visitor count and display it
-function incrementVisitorCount() {
-  visitorCountRef.transaction(function(currentCount) {
-      console.log("Current count before increment:", currentCount);
-      return (currentCount || 0) + 1;
-  });
-}
-
-// Update the displayed visitor count on the webpage
-function displayVisitorCount() {
-    visitorCountRef.on('value', function(snapshot) {
-        var count = snapshot.val();
-        // Update the HTML element with the current visitor count
-        document.getElementById('visitorCount').innerText = "Visitors: " + count;
-    });
-}
-
-// Call the functions when the page loads
-window.onload = function() {
-    incrementVisitorCount(); // Increment count when the page loads
-    displayVisitorCount(); // Display updated count
-};
-
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
 window.onresize = resizeCanvas;
