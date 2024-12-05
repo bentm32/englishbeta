@@ -263,10 +263,10 @@ var visitorCountRef = database.ref('visitorCount');
 
 // Increment visitor count and display it
 function incrementVisitorCount() {
-    // Increment the visitor count by 1
-    visitorCountRef.transaction(function(currentCount) {
-        return (currentCount || 0) + 1;
-    });
+  visitorCountRef.transaction(function(currentCount) {
+      console.log("Current count before increment:", currentCount);
+      return (currentCount || 0) + 1;
+  });
 }
 
 // Update the displayed visitor count on the webpage
