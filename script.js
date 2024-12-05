@@ -258,6 +258,24 @@ function resizeCanvas() {
   ctx.scale(scaleFactor, scaleFactor);
 }
 
+// Reference to the visitor count node in Firebase
+const visitorCountRef = firebase.database().ref('visitorCount');
+
+// Increment visitor count on page load
+visitorCountRef.transaction((currentCount) => {
+  return (currentCount || 0) + 1; // Increment or initialize to 1 if null
+});
+
+// Display the visitor count
+visitorCountRef.on('value', (snapshot) => {
+  const visitorCount = snapshot.val();
+  const visitorDisplay = document.createElement('p');
+  visitorDisplay.id = 'visitorCount';
+  visitorDisplay.textContent = `Visitor Count: ${visitorCount}`;
+  document.body.prepend(visitorDisplay); // Add to the top of the page
+});
+
+document.getElementById('visitorCountContainer').textContent = `Visitor Count: ${visitorCount}`;
 
 // Call resizeCanvas on load and window resize
 window.onload = resizeCanvas;
