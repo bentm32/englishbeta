@@ -15,7 +15,7 @@
     <p>Maybe you’re naturally drawn to odd places, exploring for exploration’s sake.</p> 
     <p>Or perhaps there’s no reason at all, yet here you are.</p> 
     <p>Scanning this QR code reveals your curiosity in and of itself.</p> 
-    <p>Even though you may be here in solidarity, remeber you are never alone, in any of your endeavors.</p>
+    <p>Even though you may be here in solidarity, remember you are never alone, in any of your endeavors.</p>
     <p>Leave a message, doodle, or note to remind others they’re not alone in their journey.</p>
 
     <p id="visitorCount">Visitors: 0</p>
@@ -26,11 +26,32 @@
     
     <!-- Container for submitted stick figures -->
     <div id="stick-figure-container"></div>
-    
+
     <!-- Include Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
+    <!-- Firebase Configuration and Initialization (MUST BE FIRST) -->
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyBqz7fjMJVd1lstR-sdTgd-sS1YUui3pN0",
+            authDomain: "englishproject-810af.firebaseapp.com",
+            databaseURL: "https://englishproject-810af-default-rtdb.firebaseio.com",
+            projectId: "englishproject-810af",
+            storageBucket: "englishproject-810af.firebasestorage.app",
+            messagingSenderId: "958433136274",
+            appId: "1:958433136274:web:f7574ec8e517451269204b",
+            measurementId: "G-N1J6SFJV5E"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        } else {
+            firebase.app(); // Use the already initialized app
+        }
+    </script>
+
     <!-- Link to your script file -->
     <script src="script.js"></script>
 </body>
